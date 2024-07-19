@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/features/products_list/products_list_screen.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
@@ -7,11 +8,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final goRouter = GoRouter(
+      initialLocation: '/',
+      debugLogDiagnostics: true,
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const ProductsListScreen(),
+        ),
+      ],
+    );
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       restorationScopeId: 'app',
+      routerConfig: goRouter,
       // * The home page of the app
-      home: const ProductsListScreen(),
       onGenerateTitle: (BuildContext context) => 'My Shop'.hardcoded,
       theme: ThemeData(
         // * Use this to toggle Material 3 (defaults to true since Flutter 3.16)
