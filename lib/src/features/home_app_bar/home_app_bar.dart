@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/common_widgets/action_text_button.dart';
 import 'package:nice_and_healthy/src/constants/breakpoints.dart';
-import 'package:nice_and_healthy/src/features/account/account_screen.dart';
 import 'package:nice_and_healthy/src/features/home_app_bar/more_menu_button.dart';
 import 'package:nice_and_healthy/src/features/home_app_bar/shopping_cart_icon.dart';
-import 'package:nice_and_healthy/src/features/orders_list/orders_list_screen.dart';
-import 'package:nice_and_healthy/src/features/sign_in/email_password_sign_in_screen.dart';
-import 'package:nice_and_healthy/src/features/sign_in/email_password_sign_in_state.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/models/app_user.dart';
 
@@ -44,39 +41,23 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: Text('My Shop'.hardcoded),
         actions: [
           const ShoppingCartIcon(),
+          // ignore: unnecessary_null_comparison
           if (user != null) ...[
             ActionTextButton(
               key: MoreMenuButton.ordersKey,
               text: 'Orders'.hardcoded,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (_) => const OrdersListScreen(),
-                ),
-              ),
+              onPressed: () => context.go('/orders'),
             ),
             ActionTextButton(
               key: MoreMenuButton.accountKey,
               text: 'Account'.hardcoded,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (_) => const AccountScreen(),
-                ),
-              ),
+              onPressed: () => context.go('/account'),
             ),
           ] else
             ActionTextButton(
               key: MoreMenuButton.signInKey,
               text: 'Sign In'.hardcoded,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (_) => const EmailPasswordSignInScreen(
-                    formType: EmailPasswordSignInFormType.signIn,
-                  ),
-                ),
-              ),
+              onPressed: () => context.go('/signIn'),
             )
         ],
       );

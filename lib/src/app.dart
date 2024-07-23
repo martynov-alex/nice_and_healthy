@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:nice_and_healthy/src/features/products_list/products_list_screen.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
+import 'package:nice_and_healthy/src/routing/app_router.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final goRouter = GoRouter(
-      initialLocation: '/',
-      debugLogDiagnostics: true,
-      routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const ProductsListScreen(),
-        ),
-      ],
-    );
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       restorationScopeId: 'app',
