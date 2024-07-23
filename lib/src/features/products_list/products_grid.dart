@@ -2,11 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
 import 'package:nice_and_healthy/src/constants/test_products.dart';
-import 'package:nice_and_healthy/src/features/product_page/product_screen.dart';
 import 'package:nice_and_healthy/src/features/products_list/product_card.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
+import 'package:nice_and_healthy/src/routing/app_router.dart';
 
 /// A widget that displays the list of products that match the search query.
 class ProductsGrid extends StatelessWidget {
@@ -29,10 +30,9 @@ class ProductsGrid extends StatelessWidget {
               final product = products[index];
               return ProductCard(
                 product: product,
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ProductScreen(productId: product.id),
-                  ),
+                onPressed: () => context.goNamed(
+                  AppRoute.product.name,
+                  pathParameters: {'id': product.id},
                 ),
               );
             },
