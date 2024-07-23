@@ -1,18 +1,18 @@
-import 'package:nice_and_healthy/src/constants/test_products.dart';
-import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
-import 'package:nice_and_healthy/src/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:nice_and_healthy/src/common_widgets/custom_image.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
+import 'package:nice_and_healthy/src/constants/test_products.dart';
 import 'package:nice_and_healthy/src/features/home_app_bar/home_app_bar.dart';
 import 'package:nice_and_healthy/src/features/not_found/empty_placeholder_widget.dart';
 import 'package:nice_and_healthy/src/features/product_page/add_to_cart/add_to_cart_widget.dart';
 import 'package:nice_and_healthy/src/features/product_page/leave_review_action.dart';
 import 'package:nice_and_healthy/src/features/product_page/product_average_rating.dart';
 import 'package:nice_and_healthy/src/features/product_page/product_reviews/product_reviews_list.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/models/product.dart';
+import 'package:nice_and_healthy/src/utils/currency_formatter.dart';
 
 /// Shows the product page for a given product ID.
 class ProductScreen extends StatelessWidget {
@@ -26,6 +26,7 @@ class ProductScreen extends StatelessWidget {
         kTestProducts.firstWhere((product) => product.id == productId);
     return Scaffold(
       appBar: const HomeAppBar(),
+      // ignore: unnecessary_null_comparison
       body: product == null
           ? EmptyPlaceholderWidget(
               message: 'Product not found'.hardcoded,
