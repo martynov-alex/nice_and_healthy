@@ -7,10 +7,10 @@ import 'package:nice_and_healthy/src/common_widgets/custom_image.dart';
 import 'package:nice_and_healthy/src/common_widgets/item_quantity_selector.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
-import 'package:nice_and_healthy/src/constants/test_products.dart';
-import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
+import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
 /// Shows a shopping cart item (or loading/error UI if needed)
 class ShoppingCartItem extends StatelessWidget {
@@ -31,8 +31,8 @@ class ShoppingCartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Read from data source
-    final product =
-        kTestProducts.firstWhere((product) => product.id == item.productId);
+    final product = FakeProductsRepository.instance.getProduct(item.productId)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Sizes.p8),
       child: Card(
