@@ -4,6 +4,9 @@ analyzer:
   errors:
     todo: ignore
 
+  plugins:
+    - custom_lint
+
 linter:
   rules:
     - use_super_parameters
