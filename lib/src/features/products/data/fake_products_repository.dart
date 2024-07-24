@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/constants/test_products.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 
@@ -33,3 +34,7 @@ class FakeProductsRepository {
         kTestProducts.firstWhere((product) => product.id == id));
   }
 }
+
+final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
+  return FakeProductsRepository.instance;
+});
