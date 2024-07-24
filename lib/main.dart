@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:nice_and_healthy/src/app.dart';
@@ -12,8 +13,9 @@ void main() async {
   // * Register error handlers. For more info, see:
   // * https://docs.flutter.dev/testing/errors
   registerErrorHandlers();
+
   // * Entry point of the app
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 void registerErrorHandlers() {
