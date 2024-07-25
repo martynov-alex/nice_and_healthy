@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +66,6 @@ final productsListStreamProvider =
 
 final productStreamProvider =
     StreamProvider.autoDispose.family<Product?, String>((ref, id) {
-
   // // Example of cashing data:
   // // keep the provider alive when it's no longer used
   // final link = ref.keepAlive();
