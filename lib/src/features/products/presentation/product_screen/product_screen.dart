@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/common_widgets/custom_image.dart';
 import 'package:nice_and_healthy/src/common_widgets/empty_placeholder_widget.dart';
+import 'package:nice_and_healthy/src/common_widgets/error_message_widget.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
@@ -26,23 +27,25 @@ class ProductScreen extends StatelessWidget {
       appBar: const HomeAppBar(),
       body: Consumer(
         builder: (BuildContext context, WidgetRef ref, _) {
-          final productsRepository = ref.watch(productsRepositoryProvider);
-          final product = productsRepository.getProduct(productId)!;
+          final product = ref.watch(productStreamProvider(productId));
 
-          // ignore: unnecessary_null_comparison
-          return product == null
-              ? EmptyPlaceholderWidget(
-                  message: 'Product not found'.hardcoded,
-                )
-              : CustomScrollView(
-                  slivers: [
-                    ResponsiveSliverCenter(
-                      padding: const EdgeInsets.all(Sizes.p16),
-                      child: ProductDetails(product: product),
-                    ),
-                    ProductReviewsList(productId: productId),
-                  ],
-                );
+          return product.when(
+            data: (product) => product == null
+                ? EmptyPlaceholderWidget(
+                    message: 'Product not found'.hardcoded,
+                  )
+                : CustomScrollView(
+                    slivers: [
+                      ResponsiveSliverCenter(
+                        padding: const EdgeInsets.all(Sizes.p16),
+                        child: ProductDetails(product: product),
+                      ),
+                      ProductReviewsList(productId: productId),
+                    ],
+                  ),
+            error: (e, st) => Center(child: ErrorMessageWidget(e.toString())),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          );
         },
       ),
     );
