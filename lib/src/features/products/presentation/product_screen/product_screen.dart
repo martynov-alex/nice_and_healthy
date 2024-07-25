@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/common_widgets/custom_image.dart';
 import 'package:nice_and_healthy/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
@@ -21,25 +22,29 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Read from data source
-    final product = FakeProductsRepository.instance.getProduct(productId);
-
     return Scaffold(
       appBar: const HomeAppBar(),
-      // ignore: unnecessary_null_comparison
-      body: product == null
-          ? EmptyPlaceholderWidget(
-              message: 'Product not found'.hardcoded,
-            )
-          : CustomScrollView(
-              slivers: [
-                ResponsiveSliverCenter(
-                  padding: const EdgeInsets.all(Sizes.p16),
-                  child: ProductDetails(product: product),
-                ),
-                ProductReviewsList(productId: productId),
-              ],
-            ),
+      body: Consumer(
+        builder: (BuildContext context, WidgetRef ref, _) {
+          final productsRepository = ref.watch(productsRepositoryProvider);
+          final product = productsRepository.getProduct(productId)!;
+
+          // ignore: unnecessary_null_comparison
+          return product == null
+              ? EmptyPlaceholderWidget(
+                  message: 'Product not found'.hardcoded,
+                )
+              : CustomScrollView(
+                  slivers: [
+                    ResponsiveSliverCenter(
+                      padding: const EdgeInsets.all(Sizes.p16),
+                      child: ProductDetails(product: product),
+                    ),
+                    ProductReviewsList(productId: productId),
+                  ],
+                );
+        },
+      ),
     );
   }
 }

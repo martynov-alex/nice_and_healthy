@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:nice_and_healthy/src/common_widgets/alert_dialogs.dart';
 import 'package:nice_and_healthy/src/common_widgets/custom_image.dart';
@@ -13,7 +14,7 @@ import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
 /// Shows a shopping cart item (or loading/error UI if needed)
-class ShoppingCartItem extends StatelessWidget {
+class ShoppingCartItem extends ConsumerWidget {
   const ShoppingCartItem({
     super.key,
     required this.item,
@@ -29,9 +30,9 @@ class ShoppingCartItem extends StatelessWidget {
   final bool isEditable;
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: Read from data source
-    final product = FakeProductsRepository.instance.getProduct(item.productId)!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsRepository = ref.watch(productsRepositoryProvider);
+    final product = productsRepository.getProduct(item.productId)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Sizes.p8),

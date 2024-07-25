@@ -4,10 +4,6 @@ import 'package:nice_and_healthy/src/constants/test_products.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 
 class FakeProductsRepository {
-  FakeProductsRepository._();
-
-  static FakeProductsRepository instance = FakeProductsRepository._();
-
   List<Product> getProductsList() {
     return kTestProducts;
   }
@@ -36,5 +32,5 @@ class FakeProductsRepository {
 }
 
 final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
-  return FakeProductsRepository.instance;
+  return FakeProductsRepository();
 });

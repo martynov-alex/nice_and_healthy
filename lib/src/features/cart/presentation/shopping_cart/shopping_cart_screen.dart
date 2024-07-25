@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/common_widgets/primary_button.dart';
+import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
 import 'package:nice_and_healthy/src/features/cart/presentation/shopping_cart/shopping_cart_item.dart';
 import 'package:nice_and_healthy/src/features/cart/presentation/shopping_cart/shopping_cart_items_builder.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
-import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
 import 'package:nice_and_healthy/src/routing/app_router.dart';
 
 /// Shopping cart screen showing the items in the cart (with editable
