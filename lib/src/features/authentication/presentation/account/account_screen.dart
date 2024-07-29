@@ -15,6 +15,18 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<void>>(
+      accountScreenControllerProvider,
+      (previousState, state) {
+        if (!state.isLoading && state.hasError) {
+          showExceptionAlertDialog(
+              context: context,
+              title: 'Error'.hardcoded,
+              exception: state.error);
+        }
+      },
+    );
+
     final state = ref.watch(accountScreenControllerProvider);
 
     return Scaffold(
@@ -46,13 +58,12 @@ class AccountScreen extends ConsumerWidget {
                                 defaultActionText: 'Logout'.hardcoded,
                               );
                               if (logout == true) {
-                                await ref
+                                final success = await ref
                                     .read(accountScreenControllerProvider
                                         .notifier)
                                     .signOut();
 
-                                // TODO: only pop on success
-                                goRouter.pop();
+                                if (success) goRouter.pop();
                               }
                             },
                     ),
