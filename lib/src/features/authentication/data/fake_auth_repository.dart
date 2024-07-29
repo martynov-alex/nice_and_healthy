@@ -11,12 +11,14 @@ class FakeAuthRepository {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await Future.delayed(const Duration(seconds: 1));
+    // throw Exception('Failed to sign in with email and password.');
     if (currentUser == null) _createNewUser(email);
   }
 
   Future<void> createUserWithEmailAndPassword(
       String email, String password) async {
     await Future.delayed(const Duration(seconds: 1));
+    // throw Exception('Failed to sign in with email and password.');
     if (currentUser == null) _createNewUser(email);
   }
 

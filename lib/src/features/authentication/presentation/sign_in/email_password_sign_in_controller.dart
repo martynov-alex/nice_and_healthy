@@ -25,7 +25,7 @@ class EmailPasswordSignInController
   Future<void> _authenticate(String email, String password) async {
     switch (state.formType) {
       case EmailPasswordSignInFormType.signIn:
-        return authRepository.createUserWithEmailAndPassword(email, password);
+        return authRepository.signInWithEmailAndPassword(email, password);
       case EmailPasswordSignInFormType.register:
         return authRepository.createUserWithEmailAndPassword(email, password);
     }
