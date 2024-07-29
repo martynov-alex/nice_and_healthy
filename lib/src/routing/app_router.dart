@@ -11,6 +11,7 @@ import 'package:nice_and_healthy/src/features/orders/presentation/orders_list/or
 import 'package:nice_and_healthy/src/features/products/presentation/product_screen/product_screen.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/products_list/products_list_screen.dart';
 import 'package:nice_and_healthy/src/features/review/presentation/leave_review_screen/leave_review_screen.dart';
+import 'package:nice_and_healthy/src/routing/go_router_refresh_stream.dart';
 import 'package:nice_and_healthy/src/routing/not_found_screen.dart';
 
 enum AppRoute {
@@ -44,6 +45,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       return null;
     },
+    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
     routes: [
       GoRoute(
         path: '/',
