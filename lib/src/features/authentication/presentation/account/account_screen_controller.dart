@@ -3,7 +3,7 @@ import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repo
 
 class AccountScreenController extends StateNotifier<AsyncValue<void>> {
   AccountScreenController({required this.authRepository})
-      : super(const AsyncValue.data(null));
+      : super(const AsyncValue<void>.data(null));
 
   final FakeAuthRepository authRepository;
 

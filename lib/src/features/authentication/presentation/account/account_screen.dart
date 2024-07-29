@@ -8,6 +8,7 @@ import 'package:nice_and_healthy/src/constants/app_sizes.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen_controller.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
+import 'package:nice_and_healthy/src/utils/async_value_ui.dart';
 
 /// Simple account screen showing some user info and a logout button.
 class AccountScreen extends ConsumerWidget {
@@ -17,14 +18,7 @@ class AccountScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<void>>(
       accountScreenControllerProvider,
-      (previousState, state) {
-        if (!state.isLoading && state.hasError) {
-          showExceptionAlertDialog(
-              context: context,
-              title: 'Error'.hardcoded,
-              exception: state.error);
-        }
-      },
+      (_, state) => state.showAlertDialogOnError(context),
     );
 
     final state = ref.watch(accountScreenControllerProvider);
