@@ -1,11 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/constants/test_products.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
+import 'package:nice_and_healthy/src/utils/delay.dart';
 
 class FakeProductsRepository {
+  FakeProductsRepository({this.addDelay = true});
+
+  final bool addDelay;
   final _products = kTestProducts;
 
   List<Product> getProductsList() {
@@ -24,24 +29,24 @@ class FakeProductsRepository {
   }
 
   Future<List<Product>> fetchProductsList() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     return Future.value(_products);
   }
 
   Future<Product?> fetchProduct(String id) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     return Future.value(
         _products.firstWhereOrNull((product) => product.id == id));
   }
 
   Stream<List<Product>> watchProductsList() async* {
-    await Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     yield _products;
     // return Stream.value(_products);
   }
 
   Stream<Product?> watchProduct(String id) async* {
-    await Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     yield _products.firstWhereOrNull((product) => product.id == id);
     // return Stream.value(_products.firstWhere((product) => product.id == id));
   }
