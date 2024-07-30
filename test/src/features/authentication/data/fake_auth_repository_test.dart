@@ -15,17 +15,20 @@ void main() {
   group('FakeAuthRepository', () {
     test('currentUser is null after initialization', () {
       final authRepository = makeFakeAuthRepository();
+      addTearDown(authRepository.dispose);
       expect(authRepository.currentUser, null);
       expect(authRepository.authStateChanges(), emits(null));
     });
     test('current user is not null after sign in', () async {
       final authRepository = makeFakeAuthRepository();
+      addTearDown(authRepository.dispose);
       await authRepository.signInWithEmailAndPassword(testEmail, testPassword);
       expect(authRepository.currentUser, testUser);
       expect(authRepository.authStateChanges(), emits(testUser));
     });
     test('current user is not null after registration', () async {
       final authRepository = makeFakeAuthRepository();
+      addTearDown(authRepository.dispose);
       await authRepository.createUserWithEmailAndPassword(
           testEmail, testPassword);
       expect(authRepository.currentUser, testUser);
@@ -33,6 +36,7 @@ void main() {
     });
     test('current user is null after sign out', () async {
       final authRepository = makeFakeAuthRepository();
+      addTearDown(authRepository.dispose);
       await authRepository.signInWithEmailAndPassword(testEmail, testPassword);
       // we can use emitsInOrder like below
       // we move expect before signOut() because of emits order
@@ -51,6 +55,7 @@ void main() {
     });
     test('sign in after dispose throws exception', () {
       final authRepository = makeFakeAuthRepository();
+      addTearDown(authRepository.dispose);
       authRepository.dispose();
       expect(
         () =>
