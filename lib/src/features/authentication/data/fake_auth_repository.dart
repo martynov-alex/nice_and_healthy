@@ -1,8 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
+import 'package:nice_and_healthy/src/utils/delay.dart';
 import 'package:nice_and_healthy/src/utils/in_memory_store.dart';
 
 class FakeAuthRepository {
+  FakeAuthRepository({this.addDelay = true});
+
+  final bool addDelay;
   final _authState = InMemoryStore<AppUser?>(null);
 
   AppUser? get currentUser => _authState.value;
@@ -10,20 +15,20 @@ class FakeAuthRepository {
   Stream<AppUser?> authStateChanges() => _authState.stream;
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await delay(addDelay);
     // throw Exception('Failed to sign in with email and password.');
     if (currentUser == null) _createNewUser(email);
   }
 
   Future<void> createUserWithEmailAndPassword(
       String email, String password) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await delay(addDelay);
     // throw Exception('Failed to sign in with email and password.');
     if (currentUser == null) _createNewUser(email);
   }
 
   Future<void> signOut() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await delay(addDelay);
     _authState.value = null;
   }
 
