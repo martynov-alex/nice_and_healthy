@@ -46,6 +46,8 @@ void main() {
       expect(controller.state.hasError, true);
       // or
       expect(controller.state, isA<AsyncError<void>>());
+      // or
+      expect(controller.state.error, exception);
     });
   });
 }
