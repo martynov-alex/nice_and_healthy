@@ -44,6 +44,22 @@ void main() {
       );
     });
 
+    test('fetchProduct(1) returns the first item', () async {
+      final productsRepository = makeFakeProductsRepository();
+      expect(
+        await productsRepository.fetchProduct('1'),
+        kTestProducts.first,
+      );
+    });
+
+    test('fetchProduct(100) returns null', () async {
+      final productsRepository = makeFakeProductsRepository();
+      expect(
+        await productsRepository.fetchProduct('100'),
+        null,
+      );
+    });
+
     test('watchProductsList emits global list', () {
       final productsRepository = makeFakeProductsRepository();
       expect(
