@@ -24,12 +24,12 @@ void main() {
     expect(
       // We should use closure here because otherwise we will have
       // unhandled error
-      () => productsRepository.getProduct('100'),
-      // If we use firstWhereOrNull() matcher could be null
-      // null,
-      // But if we use firstWhere() matcher should be 'throwsStateError'
+      // () => productsRepository.getProduct('100'),
+      // If we use firstWhere() matcher should be 'throwsStateError'
       // because firstWhere() throw StateError if there is no element
-      throwsStateError,
+      //throwsStateError,
+      productsRepository.getProduct('100'),
+      null,
     );
   });
 }
