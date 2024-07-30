@@ -1,3 +1,6 @@
+// ignore: library_annotations
+@Timeout(Duration(milliseconds: 500))
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -48,7 +51,6 @@ void main() {
         // verify
         expect(result, true);
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
     test(
       '''
@@ -93,7 +95,6 @@ void main() {
         // verify
         expect(result, false);
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
     test(
       '''
@@ -132,7 +133,6 @@ void main() {
         // verify
         expect(result, true);
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
     test(
       '''
@@ -173,7 +173,6 @@ void main() {
         // verify
         expect(result, false);
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
   });
   group('EmailPasswordSignInController updateFormType', () {

@@ -1,3 +1,6 @@
+// forces any tests to be interrupted if they take more than one second
+// ignore: library_annotations
+@Timeout(Duration(milliseconds: 500))
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -39,7 +42,6 @@ void main() {
         verify(() => authRepository.signOut()).called(1);
         // expect(controller.state, const AsyncData<void>(null));
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
 
     test(
@@ -75,7 +77,6 @@ void main() {
         // or
         // expect(controller.state.error, exception);
       },
-      timeout: const Timeout(Duration(milliseconds: 500)),
     );
   });
 }
