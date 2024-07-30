@@ -3,7 +3,7 @@ import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repo
 
 class AccountScreenController extends StateNotifier<AsyncValue<void>> {
   AccountScreenController({required this.authRepository})
-      : super(const AsyncValue<void>.data(null));
+      : super(const AsyncData<void>(null));
 
   final FakeAuthRepository authRepository;
 
@@ -21,7 +21,7 @@ class AccountScreenController extends StateNotifier<AsyncValue<void>> {
     //   state = AsyncValue.error(e, st);
     //   return false;
     // }
-    state = const AsyncValue<void>.loading();
+    state = const AsyncLoading<void>();
     state = await AsyncValue.guard<void>(() => authRepository.signOut());
   }
 }
