@@ -10,4 +10,26 @@ void main() {
       kTestProducts,
     );
   });
+
+  test('getProduct(1) returns the first item', () {
+    final productsRepository = FakeProductsRepository();
+    expect(
+      productsRepository.getProduct('1'),
+      kTestProducts.first,
+    );
+  });
+
+  test('getProduct(100) returns null', () {
+    final productsRepository = FakeProductsRepository();
+    expect(
+      // We should use closure here because otherwise we will have
+      // unhandled error
+      () => productsRepository.getProduct('100'),
+      // If we use firstWhereOrNull() matcher could be null
+      // null,
+      // But if we use firstWhere() matcher should be 'throwsStateError'
+      // because firstWhere() throw StateError if there is no element
+      throwsStateError,
+    );
+  });
 }

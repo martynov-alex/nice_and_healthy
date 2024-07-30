@@ -13,7 +13,9 @@ class FakeProductsRepository {
   }
 
   Product? getProduct(String id) {
-    return _products.firstWhereOrNull((product) => product.id == id);
+    // Just for example of test approach we use firstWhere() instead
+    // of firstWhereOrNull()
+    return _products.firstWhere((product) => product.id == id);
   }
 
   Future<List<Product>> fetchProductsList() async {
