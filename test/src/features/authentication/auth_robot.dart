@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nice_and_healthy/src/common_widgets/alert_dialogs.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen.dart';
 
 class AuthRobot {
@@ -41,4 +42,10 @@ class AuthRobot {
     expect(dialogTitle, findsNothing);
   }
 
+  Future<void> tapDialogLogoutButton() async {
+    final logoutButton = find.byKey(alertDialogDefaultKey);
+    expect(logoutButton, findsOneWidget);
+    await tester.tap(logoutButton);
+    await tester.pump();
+  }
 }

@@ -5,15 +5,21 @@ import '../../auth_robot.dart';
 void main() {
   testWidgets('Cancel logout', (tester) async {
     final r = AuthRobot(tester);
-    // pump screen
     await r.pumpAccountScreen();
-    // find logout button and tap it
     await r.tapLogoutButton();
-    // expect that the logout dialog is presented
     r.expectLogoutDialogFound();
-    // find cancel button and tap it
     await r.tapCancelButton();
-    // expect that the logout dialog is no longer visible
+    r.expectLogoutDialogNotFound();
+  });
+
+  testWidgets('Confirm logout, success', (tester) async {
+    final r = AuthRobot(tester);
+    await r.pumpAccountScreen();
+    await tester.runAsync(() async {
+      await r.tapLogoutButton();
+      r.expectLogoutDialogFound();
+      await r.tapDialogLogoutButton();
+    });
     r.expectLogoutDialogNotFound();
   });
 }
