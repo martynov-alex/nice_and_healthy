@@ -10,9 +10,6 @@ import 'package:nice_and_healthy/src/features/authentication/presentation/sign_i
 import '../../../../mocks.dart';
 
 void main() {
-  const testEmail = 'test@test.com';
-  const testPassword = '1234';
-
   group('EmailPasswordSignInController submit', () {
     test(
       '''

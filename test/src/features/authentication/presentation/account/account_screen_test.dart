@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
+import '../../../../mocks.dart';
 import '../../auth_robot.dart';
 
 void main() {
@@ -21,5 +23,21 @@ void main() {
       await r.tapDialogLogoutButton();
     });
     r.expectLogoutDialogNotFound();
+    r.expectErrorAlertNotFound();
+  });
+
+  testWidgets('Confirm logout, failure', (tester) async {
+    final authRepository = MockAuthRepository();
+    final exception = Exception('Connection fail');
+    when(authRepository.authStateChanges).thenAnswer(
+      (_) => Stream.value(testUser),
+    );
+    when(authRepository.signOut).thenThrow(exception);
+    final r = AuthRobot(tester);
+    await r.pumpAccountScreen(authRepository: authRepository);
+    await r.tapLogoutButton();
+    r.expectLogoutDialogFound();
+    await r.tapDialogLogoutButton();
+    r.expectErrorAlertFound();
   });
 }

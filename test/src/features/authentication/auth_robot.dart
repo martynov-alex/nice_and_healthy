@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nice_and_healthy/src/common_widgets/alert_dialogs.dart';
+import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen.dart';
 
 class AuthRobot {
   AuthRobot(this.tester);
   final WidgetTester tester;
 
-  Future<void> pumpAccountScreen() async {
+  Future<void> pumpAccountScreen({FakeAuthRepository? authRepository}) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(
+      ProviderScope(
+        overrides: [
+          if (authRepository != null)
+            authRepositoryProvider.overrideWithValue(authRepository),
+        ],
+        child: const MaterialApp(
           home: AccountScreen(),
         ),
       ),
@@ -47,5 +52,26 @@ class AuthRobot {
     expect(logoutButton, findsOneWidget);
     await tester.tap(logoutButton);
     await tester.pump();
+  }
+
+  // * or
+  // Future<void> tapDialogLogoutButton() async {
+  //   final logoutButton = find.descendant(
+  //     of: find.byType(Dialog),
+  //     matching: find.text('Logout'),
+  //   );
+  //   expect(logoutButton, findsOneWidget);
+  //   await tester.tap(logoutButton);
+  //   await tester.pumpAndSettle();
+  // }
+
+  void expectErrorAlertFound() {
+    final dialogTitle = find.text('Error');
+    expect(dialogTitle, findsOneWidget);
+  }
+
+  void expectErrorAlertNotFound() {
+    final dialogTitle = find.text('Error');
+    expect(dialogTitle, findsNothing);
   }
 }
