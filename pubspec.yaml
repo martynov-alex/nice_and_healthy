@@ -4,7 +4,8 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.4.4 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ^3.24.0
 
 dependencies:
   collection: 1.18.0
@@ -22,6 +23,8 @@ dev_dependencies:
   custom_lint: 0.6.4
   flutter_lints: 4.0.0
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   mocktail: 1.0.4
   riverpod_lint: 2.3.10
@@ -53,3 +56,9 @@ flutter:
   assets:
     # Add all product images
     - assets/products/
+
+  fonts:
+    # Used for Golden Image tests
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
