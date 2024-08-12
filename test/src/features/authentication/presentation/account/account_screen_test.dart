@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nice_and_healthy/src/utils/delay.dart';
 
 import '../../../../mocks.dart';
 import '../../auth_robot.dart';
@@ -39,5 +40,24 @@ void main() {
     r.expectLogoutDialogFound();
     await r.tapDialogLogoutButton();
     r.expectErrorAlertFound();
+  });
+
+  testWidgets('Confirm logout, loading', (tester) async {
+    final authRepository = MockAuthRepository();
+    when(authRepository.authStateChanges).thenAnswer(
+      (_) => Stream.value(testUser),
+    );
+    when(authRepository.signOut).thenAnswer(
+      (_) => Future.delayed(
+          const Duration(seconds: fakeRepositoriesDelayDurationInSeconds)),
+    );
+    final r = AuthRobot(tester);
+    await r.pumpAccountScreen(authRepository: authRepository);
+    await tester.runAsync(() async {
+      await r.tapLogoutButton();
+      r.expectLogoutDialogFound();
+      await r.tapDialogLogoutButton();
+    });
+    r.expectCircularProgressIndicatorFound();
   });
 }

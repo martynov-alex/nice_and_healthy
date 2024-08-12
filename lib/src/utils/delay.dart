@@ -1,7 +1,7 @@
+const fakeRepositoriesDelayDurationInSeconds = 1;
+
 Future<void> delay(
   bool addDelay, {
-  int milliseconds = 2000,
+  int seconds = fakeRepositoriesDelayDurationInSeconds,
 }) async =>
-    addDelay
-        ? Future.delayed(Duration(milliseconds: milliseconds))
-        : Future.value();
+    addDelay ? Future.delayed(Duration(seconds: seconds)) : Future.value();
