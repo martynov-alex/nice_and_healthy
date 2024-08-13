@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nice_and_healthy/src/app.dart';
 
 import '../../robot.dart';
+import '../golden_file_comparator.dart';
 
 void main() {
   final sizeVariant = ValueVariant<Size>({
@@ -21,6 +22,10 @@ void main() {
       await r.golden.loadMaterialIconFont();
       await r.pumpMyApp();
       await r.golden.precacheImages();
+
+      goldenFileComparator = GoldenDiffComparator(
+        '${(goldenFileComparator as LocalFileComparator).basedir}/goldens',
+      );
 
       final goldenFileKey =
           'goldens/products_list_${currentSize.width.toInt()}x${currentSize.height.toInt()}.png';
