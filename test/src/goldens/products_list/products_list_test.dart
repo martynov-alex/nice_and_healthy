@@ -32,6 +32,6 @@ void main() {
       await expectLater(find.byType(MyApp), matchesGoldenFile(goldenFileKey));
     },
     variant: sizeVariant,
-    tags: ['golden', 'products_list'],
+    tags: ['golden'],
   );
 }
