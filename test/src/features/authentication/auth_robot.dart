@@ -8,12 +8,20 @@ import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repo
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
+import 'package:nice_and_healthy/src/features/products/presentation/home_app_bar/more_menu_button.dart';
 
 import '../../mocks.dart';
 
 class AuthRobot {
   AuthRobot(this.tester);
   final WidgetTester tester;
+
+  Future<void> openEmailPasswordSignInScreen() async {
+    final finder = find.byKey(MoreMenuButton.signInKey);
+    expect(finder, findsOneWidget);
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
+  }
 
   Future<void> pumpEmailPasswordSignInContents({
     required FakeAuthRepository authRepository,
@@ -85,6 +93,13 @@ class AuthRobot {
     await tester.pump();
     await enterPassword(testPassword);
     await tapEmailAndPasswordSubmitButton();
+  }
+
+  Future<void> openAccountScreen() async {
+    final finder = find.byKey(MoreMenuButton.accountKey);
+    expect(finder, findsOneWidget);
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
   }
 
   Future<void> pumpAccountScreen({FakeAuthRepository? authRepository}) async {
