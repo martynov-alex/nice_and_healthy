@@ -15,6 +15,7 @@ class ShoppingCartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Read from data source
+    // TODO: Error handling
     const cartItemsList = [
       Item(
         productId: '1',

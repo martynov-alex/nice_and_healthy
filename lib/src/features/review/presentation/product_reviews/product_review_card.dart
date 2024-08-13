@@ -1,18 +1,18 @@
-import 'package:nice_and_healthy/src/common_widgets/alert_dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nice_and_healthy/src/common_widgets/alert_dialogs.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
-import 'package:nice_and_healthy/src/features/review/presentation/product_reviews/product_rating_bar.dart';
 import 'package:nice_and_healthy/src/features/review/domain/review.dart';
+import 'package:nice_and_healthy/src/features/review/presentation/product_reviews/product_rating_bar.dart';
 import 'package:nice_and_healthy/src/utils/date_formatter.dart';
 
 /// Simple card widget to show a product review info (score, comment, date)
-class ProductReviewCard extends StatelessWidget {
+class ProductReviewCard extends ConsumerWidget {
   const ProductReviewCard(this.review, {super.key});
   final Review review;
   @override
-  Widget build(BuildContext context) {
-    // TODO: Inject date formatter
-    final dateFormatted = kDateFormatter.format(review.date);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dateFormatted = ref.watch(dateFormatterProvider).format(review.date);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(Sizes.p16),

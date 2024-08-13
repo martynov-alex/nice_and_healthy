@@ -53,7 +53,8 @@ class FakeProductsRepository {
 }
 
 final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
-  return FakeProductsRepository();
+  // * Set addDelay to false for faster loading
+  return FakeProductsRepository(addDelay: false);
 });
 
 final productsListFutureProvider =
