@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 /// * The product identifier is an important concept and can have its own type.
+// TODO: Change to ProductId
 typedef ProductID = String;
 
 /// Class representing a product.
