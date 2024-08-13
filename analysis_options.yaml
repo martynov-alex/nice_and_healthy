@@ -3,10 +3,10 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     todo: ignore
+    library_annotations: ignore
 
   plugins:
     - custom_lint
 
 linter:
   rules:
-    - use_super_parameters
