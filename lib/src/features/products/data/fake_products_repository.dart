@@ -77,7 +77,7 @@ final productsListStreamProvider =
   return productsRepository.watchProductsList();
 });
 
-final productStreamProvider =
+final productProvider =
     StreamProvider.autoDispose.family<Product?, String>((ref, id) {
   // // Example of cashing data:
   // // keep the provider alive when it's no longer used
