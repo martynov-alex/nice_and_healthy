@@ -34,7 +34,7 @@ class ShoppingCartScreen extends ConsumerWidget {
       ),
       body: Consumer(
         builder: (_, ref, __) {
-          final cartValue = ref.watch(cartStreamProvider);
+          final cartValue = ref.watch(cartProvider);
 
           return AsyncValueWidget<Cart>(
             value: cartValue,

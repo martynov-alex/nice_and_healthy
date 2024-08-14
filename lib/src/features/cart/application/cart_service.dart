@@ -75,9 +75,17 @@ final cartServiceProvider = Provider<CartService>((ref) {
   );
 });
 
-final cartStreamProvider = StreamProvider<Cart>((ref) {
+final cartProvider = StreamProvider<Cart>((ref) {
   final user = ref.watch(authStateChangesProvider).value;
   return user == null
       ? ref.watch(localCartRepositoryProvider).watchCart()
       : ref.watch(remoteCartRepositoryProvider).watchCart(user.uid);
+});
+
+final cartItemsCountProvider = Provider<int>((ref) {
+  final cart = ref.watch(cartProvider);
+  return cart.maybeWhen(
+    data: (cart) => cart.items.length,
+    orElse: () => 0,
+  );
 });
