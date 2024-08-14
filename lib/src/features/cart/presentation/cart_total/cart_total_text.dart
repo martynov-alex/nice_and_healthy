@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nice_and_healthy/src/features/cart/application/cart_service.dart';
 import 'package:nice_and_healthy/src/utils/currency_formatter.dart';
 
 /// Text widget for showing the total price of the cart
@@ -8,10 +9,10 @@ class CartTotalText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Read from data source
-    const cartTotal = 104.0;
+    final cartTotalPrice = ref.watch(cartTotalPriceProvider);
     final totalFormatted =
-        ref.watch(currencyFormatterProvider).format(cartTotal);
+        ref.watch(currencyFormatterProvider).format(cartTotalPrice);
+
     return Text(
       'Total: $totalFormatted',
       style: Theme.of(context).textTheme.headlineSmall,

@@ -5,6 +5,7 @@ import 'package:nice_and_healthy/src/features/cart/data/remote/remote_cart_repos
 import 'package:nice_and_healthy/src/features/cart/domain/cart.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/mutable_cart.dart';
+import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 
 class CartService {
@@ -88,4 +89,24 @@ final cartItemsCountProvider = Provider<int>((ref) {
     data: (cart) => cart.items.length,
     orElse: () => 0,
   );
+});
+
+final cartTotalPriceProvider = Provider.autoDispose<double>((ref) {
+  final cart = ref.watch(cartProvider).value ?? const Cart();
+  final productsList = ref.watch(productsListStreamProvider).value ?? [];
+
+  if (cart.items.isNotEmpty && productsList.isNotEmpty) {
+    var total = 0.0;
+    for (final item in cart.items.entries) {
+      // For Cart item:
+      // - key: product ID
+      // - value: quantity
+      final product =
+          productsList.firstWhere((product) => product.id == item.key);
+      total += product.price * item.value;
+    }
+    return total;
+  } else {
+    return 0.0;
+  }
 });
