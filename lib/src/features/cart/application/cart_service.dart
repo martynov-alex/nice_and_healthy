@@ -52,16 +52,18 @@ class CartService {
   /// depending on the user auth state
   Future<Cart> _fetchCart() async {
     final user = authRepository.currentUser;
-    if (user == null) return localCartRepository.fetchCart();
-    return remoteCartRepository.fetchCart(user.uid);
+    return user == null
+        ? localCartRepository.fetchCart()
+        : remoteCartRepository.fetchCart(user.uid);
   }
 
   /// Save the cart to the local or remote repository
   /// depending on the user auth state
   Future<void> _setCart(Cart cart) async {
     final user = authRepository.currentUser;
-    if (user == null) return localCartRepository.setCart(cart);
-    return remoteCartRepository.setCart(user.uid, cart);
+    return user == null
+        ? localCartRepository.setCart(cart)
+        : remoteCartRepository.setCart(user.uid, cart);
   }
 }
 
@@ -71,4 +73,11 @@ final cartServiceProvider = Provider<CartService>((ref) {
     localCartRepository: ref.watch(localCartRepositoryProvider),
     remoteCartRepository: ref.watch(remoteCartRepositoryProvider),
   );
+});
+
+final cartStreamProvider = StreamProvider<Cart>((ref) {
+  final user = ref.watch(authStateChangesProvider).value;
+  return user == null
+      ? ref.watch(localCartRepositoryProvider).watchCart()
+      : ref.watch(remoteCartRepositoryProvider).watchCart(user.uid);
 });
