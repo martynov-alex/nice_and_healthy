@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/common_widgets/item_quantity_selector.dart';
 import 'package:nice_and_healthy/src/common_widgets/primary_button.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
+import 'package:nice_and_healthy/src/features/cart/application/cart_service.dart';
 import 'package:nice_and_healthy/src/features/cart/presentation/add_to_cart/add_to_cart_controller.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
@@ -23,7 +24,7 @@ class AddToCartWidget extends ConsumerWidget {
       (_, state) => state.showAlertDialogOnError(context),
     );
 
-    final availableQuantity = product.availableQuantity;
+    final availableQuantity = ref.watch(itemAvailableQuantityProvider(product));
     final state = ref.watch(addToCartControllerProvider);
 
     return Column(
