@@ -54,7 +54,7 @@ class CartSyncService {
         // Remove all items from the local cart
         await localCartRepository.setCart(const Cart());
       }
-    } on Exception catch (e, st) {
+    } on Exception catch (e, __) {
       // TODO: Handle error and/or rethrow
     }
   }
