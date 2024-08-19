@@ -19,7 +19,7 @@ class CartSyncService {
         final nextUser = next.value;
 
         if (previousUser == null && nextUser != null) {
-          log('sign in: ${nextUser.uid}');
+          log('sign in: ${nextUser.uid}', name: 'CartSyncService');
         }
       },
     );
