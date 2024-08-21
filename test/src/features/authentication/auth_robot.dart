@@ -88,7 +88,7 @@ class AuthRobot {
     expect(dialogTitle, findsNothing);
   }
 
-  Future<void> enterAndSubmitEmailAndPassword() async {
+  Future<void> signInWithEmailAndPassword() async {
     await enterEmail(testEmail);
     await tester.pump();
     await enterPassword(testPassword);
