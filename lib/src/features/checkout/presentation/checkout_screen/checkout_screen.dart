@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
 import 'package:nice_and_healthy/src/features/checkout/presentation/payment/payment_page.dart';
@@ -11,33 +13,34 @@ enum CheckoutSubRoute { register, payment }
 /// 1. Register page
 /// 2. Payment page
 // TODO: Show the correct page based on whether the user is signed in.
-class CheckoutScreen extends StatefulWidget {
+class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
   @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
+  ConsumerState<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
-class _CheckoutScreenState extends State<CheckoutScreen> {
-  final _controller = PageController();
+class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
+  late final PageController _controller;
 
   var _subRoute = CheckoutSubRoute.register;
   // TODO: Load the correct initial page when this screen is presented
 
   @override
+  void initState() {
+    super.initState();
+    final user = ref.read(authRepositoryProvider).currentUser;
+    if (user != null) {
+      setState(() => _subRoute = CheckoutSubRoute.payment);
+    }
+    // only initialize the controller once we know what is the initialPage
+    _controller = PageController(initialPage: _subRoute.index);
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _onSignedIn() {
-    setState(() => _subRoute = CheckoutSubRoute.payment);
-    // perform a nice scroll animation to reveal the next page
-    _controller.animateToPage(
-      _subRoute.index,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
@@ -63,6 +66,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           const PaymentPage()
         ],
       ),
+    );
+  }
+
+  void _onSignedIn() {
+    setState(() => _subRoute = CheckoutSubRoute.payment);
+    // perform a nice scroll animation to reveal the next page
+    _controller.animateToPage(
+      _subRoute.index,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
     );
   }
 }
