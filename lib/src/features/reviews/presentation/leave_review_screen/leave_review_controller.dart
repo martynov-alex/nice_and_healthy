@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/features/reviews/application/reviews_service.dart';
@@ -18,6 +19,7 @@ class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
     required ProductID productId,
     required String comment,
     required double rating,
+    VoidCallback? onSuccess,
   }) async {
     final review = Review(
       comment: comment,
@@ -32,6 +34,8 @@ class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
       // * only set the state if the controller hasn't been disposed
       state = newState;
     }
+
+    if (!state.hasError) onSuccess?.call();
   }
 }
 

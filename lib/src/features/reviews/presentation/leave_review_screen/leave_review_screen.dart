@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/common_widgets/primary_button.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
@@ -108,6 +109,7 @@ class _LeaveReviewFormState extends ConsumerState<LeaveReviewForm> {
                         productId: widget.productId,
                         rating: _rating,
                         comment: _controller.text,
+                        onSuccess: context.pop,
                       ),
         )
       ],
