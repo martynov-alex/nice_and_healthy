@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/exceptions/app_exception.dart';
+import 'package:nice_and_healthy/src/exceptions/error_logger.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
 
 class AsyncErrorLogger extends ProviderObserver {
@@ -12,14 +11,16 @@ class AsyncErrorLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
+    final errorLogger = container.read(errorLoggerProvider);
     final error = _findError(newValue);
+
     if (error != null) {
       if (error.error is AppException) {
         // only prints the AppException data
-        log(error.error.toString(), name: 'async_error_logger');
+        errorLogger.logAppException(error.error as AppException);
       } else {
         // prints everything including the stack trace
-        log(error.toString(), name: 'async_error_logger');
+        errorLogger.logError(error.error, error.stackTrace);
       }
     }
   }
