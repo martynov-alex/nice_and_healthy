@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
-import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 import 'package:nice_and_healthy/src/features/cart/data/remote/remote_cart_repository.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/cart.dart';
 import 'package:nice_and_healthy/src/features/checkout/application/fake_checkout_service.dart';
@@ -12,7 +11,6 @@ import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
 import '../../../mocks.dart';
 
 void main() {
-  const testUser = AppUser(uid: 'abc');
   setUpAll(() {
     // needed for MockOrdersRepository
     registerFallbackValue(Order(

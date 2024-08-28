@@ -1,53 +1,82 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
+import 'package:nice_and_healthy/src/features/authentication/domain/fake_app_user.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/utils/delay.dart';
 import 'package:nice_and_healthy/src/utils/in_memory_store.dart';
 
 class FakeAuthRepository {
   FakeAuthRepository({this.addDelay = true});
-
   final bool addDelay;
   final _authState = InMemoryStore<AppUser?>(null);
 
+  Stream<AppUser?> authStateChanges() => _authState.stream;
   AppUser? get currentUser => _authState.value;
 
-  Stream<AppUser?> authStateChanges() => _authState.stream;
+  // List to keep track of all user accounts
+  final List<FakeAppUser> _users = [];
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await delay(addDelay);
-    // throw Exception('Failed to sign in with email and password.');
-    _createNewUser(email);
+    // check the given credentials against each registered user
+    for (final u in _users) {
+      // matching email and password
+      if (u.email == email && u.password == password) {
+        _authState.value = u;
+        return;
+      }
+      // same email, wrong password
+      if (u.email == email && u.password != password) {
+        throw Exception('Wrong password'.hardcoded);
+      }
+    }
+    throw Exception('User not found'.hardcoded);
   }
 
   Future<void> createUserWithEmailAndPassword(
       String email, String password) async {
     await delay(addDelay);
-    // throw Exception('Failed to sign in with email and password.');
-    _createNewUser(email);
+    // check if the email is already in use
+    for (final u in _users) {
+      if (u.email == email) {
+        throw Exception('Email already in use'.hardcoded);
+      }
+    }
+    // minimum password length requirement
+    if (password.length < 8) {
+      throw Exception('Password is too weak'.hardcoded);
+    }
+    // create new user
+    _createNewUser(email, password);
   }
 
   Future<void> signOut() async {
-    await delay(addDelay);
     _authState.value = null;
   }
 
   void dispose() => _authState.close();
 
-  void _createNewUser(String email) {
-    final uid = email.split('').reversed.join();
-    _authState.value = AppUser(uid: uid, email: email);
+  void _createNewUser(String email, String password) {
+    // create new user
+    final user = FakeAppUser(
+      uid: email.split('').reversed.join(),
+      email: email,
+      password: password,
+    );
+    // register it
+    _users.add(user);
+    // update the auth state
+    _authState.value = user;
   }
 }
 
 final authRepositoryProvider = Provider<FakeAuthRepository>((ref) {
-  final authRepo = FakeAuthRepository();
-  ref.onDispose(() => authRepo.dispose());
-  return authRepo;
+  final auth = FakeAuthRepository();
+  ref.onDispose(() => auth.dispose());
+  return auth;
 });
 
 final authStateChangesProvider = StreamProvider<AppUser?>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-
   return authRepository.authStateChanges();
 });

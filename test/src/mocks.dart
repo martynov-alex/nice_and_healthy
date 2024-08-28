@@ -10,10 +10,8 @@ import 'package:nice_and_healthy/src/features/products/data/fake_products_reposi
 
 const testEmail = 'test@test.ru';
 const testPassword = 'test1234';
-final testUser = AppUser(
-  uid: testEmail.split('').reversed.join(),
-  email: testEmail,
-);
+final testUid = testEmail.split('').reversed.join();
+final testUser = AppUser(uid: testUid, email: testEmail);
 
 class MockAuthRepository extends Mock implements FakeAuthRepository {}
 
