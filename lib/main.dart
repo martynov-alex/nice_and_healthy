@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:nice_and_healthy/src/app.dart';
+import 'package:nice_and_healthy/src/exceptions/async_error_logger.dart';
 import 'package:nice_and_healthy/src/features/cart/application/cart_sync_service.dart';
 import 'package:nice_and_healthy/src/features/cart/data/local/local_cart_repository.dart';
 import 'package:nice_and_healthy/src/features/cart/data/local/sembast_cart_repository.dart';
@@ -22,6 +23,9 @@ void main() async {
   final container = ProviderContainer(
     overrides: [
       localCartRepositoryProvider.overrideWithValue(localCartRepository),
+    ],
+    observers: [
+      AsyncErrorLogger(),
     ],
   );
 
