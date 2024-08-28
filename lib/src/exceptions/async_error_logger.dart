@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/exceptions/app_exception.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
@@ -15,10 +16,10 @@ class AsyncErrorLogger extends ProviderObserver {
     if (error != null) {
       if (error.error is AppException) {
         // only prints the AppException data
-        debugPrint(error.error.toString());
+        log(error.error.toString(), name: 'async_error_logger');
       } else {
         // prints everything including the stack trace
-        debugPrint(error.toString());
+        log(error.toString(), name: 'async_error_logger');
       }
     }
   }

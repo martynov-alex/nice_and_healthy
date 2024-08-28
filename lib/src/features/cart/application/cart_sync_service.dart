@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:nice_and_healthy/src/exceptions/error_logger.dart';
 import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 import 'package:nice_and_healthy/src/features/cart/data/local/local_cart_repository.dart';
@@ -54,8 +55,8 @@ class CartSyncService {
         // Remove all items from the local cart
         await localCartRepository.setCart(const Cart());
       }
-    } on Exception catch (e, __) {
-      // TODO: Handle error and/or rethrow
+    } on Exception catch (e, st) {
+      ref.read(errorLoggerProvider).logError(e, st);
     }
   }
 
