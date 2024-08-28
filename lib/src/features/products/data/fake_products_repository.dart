@@ -6,15 +6,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/constants/test_products.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/utils/delay.dart';
+import 'package:nice_and_healthy/src/utils/in_memory_store.dart';
 
 class FakeProductsRepository {
   FakeProductsRepository({this.addDelay = true});
 
   final bool addDelay;
-  final _products = kTestProducts;
+
+  /// Preload with the default list of products when the app starts
+  final _products = InMemoryStore<List<Product>>(List.from(kTestProducts));
 
   List<Product> getProductsList() {
-    return _products;
+    return _products.value;
   }
 
   Product? getProduct(String id) {
@@ -25,30 +28,47 @@ class FakeProductsRepository {
     // } catch (e) {
     //   return null;
     // }
-    return _products.firstWhereOrNull((product) => product.id == id);
+    return _products.value.firstWhereOrNull((product) => product.id == id);
   }
 
   Future<List<Product>> fetchProductsList() async {
     await delay(addDelay);
-    return Future.value(_products);
+    return Future.value(_products.value);
   }
 
   Future<Product?> fetchProduct(String id) async {
     await delay(addDelay);
     return Future.value(
-        _products.firstWhereOrNull((product) => product.id == id));
+        _products.value.firstWhereOrNull((product) => product.id == id));
   }
 
   Stream<List<Product>> watchProductsList() async* {
     await delay(addDelay);
-    yield _products;
+    yield _products.value;
     // return Stream.value(_products);
   }
 
   Stream<Product?> watchProduct(String id) async* {
     await delay(addDelay);
-    yield _products.firstWhereOrNull((product) => product.id == id);
+    yield _products.value.firstWhereOrNull((product) => product.id == id);
     // return Stream.value(_products.firstWhere((product) => product.id == id));
+  }
+
+  /// Update product or add a new one
+  Future<void> setProduct(Product product) async {
+    await delay(addDelay);
+    final products = _products.value;
+    final index = products.indexWhere((p) => p.id == product.id);
+
+    if (index == -1) {
+      // if not found, add as a new product
+      products.add(product);
+    } else {
+      // else, overwrite previous product
+      products[index] = product;
+    }
+
+    _products.value = products;
   }
 }
 

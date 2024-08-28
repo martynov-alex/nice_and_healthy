@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
+import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/utils/delay.dart';
 import 'package:nice_and_healthy/src/utils/in_memory_store.dart';
 
@@ -12,14 +13,22 @@ class FakeOrdersRepository {
   /// - value: list of orders for that user
   final _orders = InMemoryStore<Map<String, List<Order>>>({});
 
-  // A stream that returns all the orders for a given user, ordered by date
-  Stream<List<Order>> watchUserOrders(String uid) {
+  /// A stream that returns all the orders for a given user, ordered by date
+  /// Only user orders that match the given productId will be returned.
+  /// If a productId is not passed, all user orders will be returned.
+  Stream<List<Order>> watchUserOrders(String uid, {ProductID? productId}) {
     return _orders.stream.map((ordersData) {
       final ordersList = ordersData[uid] ?? [];
       ordersList.sort(
         (lhs, rhs) => rhs.orderDate.compareTo(lhs.orderDate),
       );
-      return ordersList;
+      if (productId != null) {
+        return ordersList
+            .where((order) => order.items.keys.contains(productId))
+            .toList();
+      } else {
+        return ordersList;
+      }
     });
   }
 

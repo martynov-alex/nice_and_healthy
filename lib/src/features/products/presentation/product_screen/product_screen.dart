@@ -12,14 +12,14 @@ import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/home_app_bar/home_app_bar.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/product_screen/leave_review_action.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/product_screen/product_average_rating.dart';
-import 'package:nice_and_healthy/src/features/review/presentation/product_reviews/product_reviews_list.dart';
+import 'package:nice_and_healthy/src/features/reviews/presentation/product_reviews/product_reviews_list.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/utils/currency_formatter.dart';
 
 /// Shows the product page for a given product ID.
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key, required this.productId});
-  final String productId;
+  final ProductID productId;
 
   @override
   Widget build(BuildContext context) {
