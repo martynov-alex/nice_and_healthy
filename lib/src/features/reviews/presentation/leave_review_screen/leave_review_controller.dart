@@ -19,8 +19,15 @@ class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
     required ProductID productId,
     required String comment,
     required double rating,
+    required Review? previousReview,
     VoidCallback? onSuccess,
   }) async {
+    if (previousReview?.rating == rating &&
+        previousReview?.comment == comment) {
+      if (mounted) onSuccess?.call();
+      return;
+    }
+
     final review = Review(
       comment: comment,
       rating: rating,
@@ -33,9 +40,8 @@ class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
     if (mounted) {
       // * only set the state if the controller hasn't been disposed
       state = newState;
+      if (!state.hasError) onSuccess?.call();
     }
-
-    if (!state.hasError) onSuccess?.call();
   }
 }
 

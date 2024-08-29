@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nice_and_healthy/src/common_widgets/async_value_widget.dart';
 import 'package:nice_and_healthy/src/common_widgets/primary_button.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
 import 'package:nice_and_healthy/src/constants/breakpoints.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
+import 'package:nice_and_healthy/src/features/reviews/application/reviews_service.dart';
 import 'package:nice_and_healthy/src/features/reviews/domain/review.dart';
 import 'package:nice_and_healthy/src/features/reviews/presentation/leave_review_screen/leave_review_controller.dart';
 import 'package:nice_and_healthy/src/features/reviews/presentation/product_reviews/product_rating_bar.dart';
@@ -18,8 +20,6 @@ class LeaveReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Read from data source
-    const review = null;
     return Scaffold(
       appBar: AppBar(
         title: Text('Leave a review'.hardcoded),
@@ -27,7 +27,17 @@ class LeaveReviewScreen extends StatelessWidget {
       body: ResponsiveCenter(
         maxContentWidth: Breakpoint.tablet,
         padding: const EdgeInsets.all(Sizes.p16),
-        child: LeaveReviewForm(productId: productId, review: review),
+        child: Consumer(
+          builder: (_, ref, __) {
+            final reviewValue = ref.watch(userReviewFutureProvider(productId));
+
+            return AsyncValueWidget<Review?>(
+              value: reviewValue,
+              data: (review) =>
+                  LeaveReviewForm(productId: productId, review: review),
+            );
+          },
+        ),
       ),
     );
   }
@@ -53,7 +63,11 @@ class _LeaveReviewFormState extends ConsumerState<LeaveReviewForm> {
   @override
   void initState() {
     super.initState();
-    // TODO: Initialize state
+    final review = widget.review;
+    if (review != null) {
+      _controller.text = review.comment;
+      _rating = review.rating;
+    }
   }
 
   @override
@@ -109,6 +123,7 @@ class _LeaveReviewFormState extends ConsumerState<LeaveReviewForm> {
                         productId: widget.productId,
                         rating: _rating,
                         comment: _controller.text,
+                        previousReview: widget.review,
                         onSuccess: context.pop,
                       ),
         )
