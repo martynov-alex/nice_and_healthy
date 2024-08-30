@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/features/reviews/application/reviews_service.dart';
 import 'package:nice_and_healthy/src/features/reviews/domain/review.dart';
-import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
 
 class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
   LeaveReviewController({

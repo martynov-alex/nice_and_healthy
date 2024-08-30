@@ -6,7 +6,7 @@ import 'package:nice_and_healthy/src/features/orders/data/fake_orders_repository
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
 import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
-import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
 
 /// A fake checkout service that doesn't process real payments.
 class FakeCheckoutService {

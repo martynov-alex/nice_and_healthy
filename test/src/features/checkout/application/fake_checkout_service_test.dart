@@ -7,7 +7,7 @@ import 'package:nice_and_healthy/src/features/cart/domain/cart.dart';
 import 'package:nice_and_healthy/src/features/checkout/application/fake_checkout_service.dart';
 import 'package:nice_and_healthy/src/features/orders/data/fake_orders_repository.dart';
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
-import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
 
 import '../../../mocks.dart';
 
