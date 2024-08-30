@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
+import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_form_type.dart';
 
 import '../../../../mocks.dart';
 import '../../auth_robot.dart';
@@ -62,7 +62,7 @@ void main() {
       expect(didSignIn, true);
     });
   });
-group('register', () {
+  group('register', () {
     testWidgets('''
         GIVEN formType is register
         WHEN tap on the sign-in button

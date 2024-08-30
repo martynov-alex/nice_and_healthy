@@ -6,8 +6,8 @@ import 'package:nice_and_healthy/src/common_widgets/custom_text_button.dart';
 import 'package:nice_and_healthy/src/common_widgets/primary_button.dart';
 import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen.dart';
+import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_form_type.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
-import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/home_app_bar/more_menu_button.dart';
 
 import '../../mocks.dart';

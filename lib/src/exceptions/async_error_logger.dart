@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/exceptions/app_exception.dart';
 import 'package:nice_and_healthy/src/exceptions/error_logger.dart';
-import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
 
 class AsyncErrorLogger extends ProviderObserver {
   @override
@@ -26,9 +25,7 @@ class AsyncErrorLogger extends ProviderObserver {
   }
 
   AsyncError<dynamic>? _findError(Object? value) {
-    if (value is EmailPasswordSignInState && value.value is AsyncError) {
-      return value.value as AsyncError;
-    } else if (value is AsyncError) {
+    if (value is AsyncError) {
       return value;
     } else {
       return null;

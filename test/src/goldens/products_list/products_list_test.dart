@@ -17,10 +17,12 @@ void main() {
     (tester) async {
       final r = Robot(tester);
       final currentSize = sizeVariant.currentValue!;
-      await r.golden.setSurfaceSize(currentSize);
-      await r.golden.loadRobotoFont();
-      await r.golden.loadMaterialIconFont();
-      await r.pumpMyApp();
+      await tester.runAsync(() async {
+        await r.golden.setSurfaceSize(currentSize);
+        await r.golden.loadRobotoFont();
+        await r.golden.loadMaterialIconFont();
+        await r.pumpMyApp();
+      });
       await r.golden.precacheImages();
 
       goldenFileComparator = GoldenDiffComparator(
@@ -32,6 +34,6 @@ void main() {
       await expectLater(find.byType(MyApp), matchesGoldenFile(goldenFileKey));
     },
     variant: sizeVariant,
-    tags: ['golden'],
+    tags: ['golden', 'products_list'],
   );
 }

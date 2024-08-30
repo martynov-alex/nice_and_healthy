@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
+import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_form_type.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
-import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
 import 'package:nice_and_healthy/src/features/checkout/presentation/payment/payment_page.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
