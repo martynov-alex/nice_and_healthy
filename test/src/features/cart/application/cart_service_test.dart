@@ -1,6 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
+import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 import 'package:nice_and_healthy/src/features/cart/application/cart_service.dart';
+import 'package:nice_and_healthy/src/features/cart/data/local/local_cart_repository.dart';
+import 'package:nice_and_healthy/src/features/cart/data/remote/remote_cart_repository.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/cart.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
 
@@ -10,11 +15,11 @@ void main() {
   setUpAll(() {
     registerFallbackValue(const Cart());
   });
+  const testUser = AppUser(uid: 'abc', email: 'abc@test.com');
 
   late MockAuthRepository authRepository;
   late MockRemoteCartRepository remoteCartRepository;
   late MockLocalCartRepository localCartRepository;
-
   setUp(() {
     authRepository = MockAuthRepository();
     remoteCartRepository = MockRemoteCartRepository();
@@ -22,22 +27,15 @@ void main() {
   });
 
   CartService makeCartService() {
-    return CartService(
-      authRepository: authRepository,
-      remoteCartRepository: remoteCartRepository,
-      localCartRepository: localCartRepository,
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepository),
+        localCartRepositoryProvider.overrideWithValue(localCartRepository),
+        remoteCartRepositoryProvider.overrideWithValue(remoteCartRepository),
+      ],
     );
-
-    // * Another way if we use Ref for ID instead of repos separately
-    // final container = ProviderContainer(
-    //   overrides: [
-    //     authRepositoryProvider.overrideWithValue(authRepository),
-    //     remoteCartRepositoryProvider.overrideWithValue(remoteCartRepository),
-    //     localCartRepositoryProvider.overrideWithValue(localCartRepository),
-    //   ],
-    // );
-    // addTearDown(container.dispose);
-    // return container.read(cartServiceProvider);
+    addTearDown(container.dispose);
+    return container.read(cartServiceProvider);
   }
 
   group('setItem', () {
@@ -53,28 +51,41 @@ void main() {
       );
       final cartService = makeCartService();
       // run
-      await cartService.setItem(const Item(productId: '123', quantity: 1));
+      await cartService.setItem(
+        const Item(productId: '123', quantity: 1),
+      );
       // verify
-      verify(() => localCartRepository.setCart(expectedCart)).called(1);
-      verifyNever(() => remoteCartRepository.setCart(any(), any()));
+      verify(
+        () => localCartRepository.setCart(expectedCart),
+      ).called(1);
+      verifyNever(
+        () => remoteCartRepository.setCart(any(), any()),
+      );
     });
 
-    test('non-null user, writes item to local cart', () async {
+    test('non-null user, writes item to remote cart', () async {
       // setup
       const expectedCart = Cart({'123': 1});
       when(() => authRepository.currentUser).thenReturn(testUser);
-      when(() => remoteCartRepository.fetchCart(testUser.uid))
-          .thenAnswer((_) => Future.value(const Cart()));
+      when(() => remoteCartRepository.fetchCart(testUser.uid)).thenAnswer(
+        (_) => Future.value(const Cart()),
+      );
       when(() => remoteCartRepository.setCart(testUser.uid, expectedCart))
-          .thenAnswer((_) => Future.value());
+          .thenAnswer(
+        (_) => Future.value(),
+      );
       final cartService = makeCartService();
       // run
-      await cartService.setItem(const Item(productId: '123', quantity: 1));
+      await cartService.setItem(
+        const Item(productId: '123', quantity: 1),
+      );
       // verify
       verify(
         () => remoteCartRepository.setCart(testUser.uid, expectedCart),
       ).called(1);
-      verifyNever(() => localCartRepository.setCart(any()));
+      verifyNever(
+        () => localCartRepository.setCart(any()),
+      );
     });
   });
 

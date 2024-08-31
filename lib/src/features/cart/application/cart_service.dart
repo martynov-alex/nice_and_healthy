@@ -9,100 +9,89 @@ import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/mutable_cart.dart';
 import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'cart_service.g.dart';
 
 class CartService {
-  CartService({
-    required this.authRepository,
-    required this.localCartRepository,
-    required this.remoteCartRepository,
-  });
+  CartService(this.ref);
+  final Ref ref;
 
-  final FakeAuthRepository authRepository;
-  final LocalCartRepository localCartRepository;
-  final RemoteCartRepository remoteCartRepository;
+  /// fetch the cart from the local or remote repository
+  /// depending on the user auth state
+  Future<Cart> _fetchCart() {
+    final user = ref.read(authRepositoryProvider).currentUser;
+    if (user != null) {
+      return ref.read(remoteCartRepositoryProvider).fetchCart(user.uid);
+    } else {
+      return ref.read(localCartRepositoryProvider).fetchCart();
+    }
+  }
 
-  /// Add an item to the cart by *overriding* the quantity if it already exists.
+  /// save the cart to the local or remote repository
+  /// depending on the user auth state
+  Future<void> _setCart(Cart cart) async {
+    final user = ref.read(authRepositoryProvider).currentUser;
+    if (user != null) {
+      await ref.read(remoteCartRepositoryProvider).setCart(user.uid, cart);
+    } else {
+      await ref.read(localCartRepositoryProvider).setCart(cart);
+    }
+  }
+
+  /// sets an item in the local or remote cart depending on the user auth state
   Future<void> setItem(Item item) async {
     final cart = await _fetchCart();
     final updated = cart.setItem(item);
     await _setCart(updated);
   }
 
-  /// Add an item to the cart by *updating* the quantity if it already exists.
+  /// adds an item in the local or remote cart depending on the user auth state
   Future<void> addItem(Item item) async {
     final cart = await _fetchCart();
     final updated = cart.addItem(item);
     await _setCart(updated);
   }
 
-  /// Add a list of items to the cart by *updating* the quantities of items that
-  /// already exist.
-  Future<void> addItems(List<Item> items) async {
-    final cart = await _fetchCart();
-    final updated = cart.addItems(items);
-    await _setCart(updated);
-  }
-
-  /// If an item with the given productId is found, remove it from the local or
-  /// remote cart depending on the user auth state.
+  /// removes an item from the local or remote cart depending on the user auth
+  /// state
   Future<void> removeItemById(ProductID productId) async {
     final cart = await _fetchCart();
     final updated = cart.removeItemById(productId);
     await _setCart(updated);
   }
+}
 
-  /// Fetch the cart from the local or remote repository
-  /// depending on the user auth state
-  Future<Cart> _fetchCart() async {
-    final user = authRepository.currentUser;
-    return user == null
-        ? localCartRepository.fetchCart()
-        : remoteCartRepository.fetchCart(user.uid);
-  }
+@Riverpod(keepAlive: true)
+CartService cartService(CartServiceRef ref) {
+  return CartService(ref);
+}
 
-  /// Save the cart to the local or remote repository
-  /// depending on the user auth state
-  Future<void> _setCart(Cart cart) async {
-    final user = authRepository.currentUser;
-    return user == null
-        ? localCartRepository.setCart(cart)
-        : remoteCartRepository.setCart(user.uid, cart);
+@Riverpod(keepAlive: true)
+Stream<Cart> cart(CartRef ref) {
+  final user = ref.watch(authStateChangesProvider).value;
+  if (user != null) {
+    return ref.watch(remoteCartRepositoryProvider).watchCart(user.uid);
+  } else {
+    return ref.watch(localCartRepositoryProvider).watchCart();
   }
 }
 
-final cartServiceProvider = Provider<CartService>((ref) {
-  return CartService(
-    authRepository: ref.watch(authRepositoryProvider),
-    localCartRepository: ref.watch(localCartRepositoryProvider),
-    remoteCartRepository: ref.watch(remoteCartRepositoryProvider),
-  );
-});
+@Riverpod(keepAlive: true)
+int cartItemsCount(CartItemsCountRef ref) {
+  return ref.watch(cartProvider).maybeMap(
+        data: (cart) => cart.value.items.length,
+        orElse: () => 0,
+      );
+}
 
-final cartProvider = StreamProvider<Cart>((ref) {
-  final user = ref.watch(authStateChangesProvider).value;
-  return user == null
-      ? ref.watch(localCartRepositoryProvider).watchCart()
-      : ref.watch(remoteCartRepositoryProvider).watchCart(user.uid);
-});
-
-final cartItemsCountProvider = Provider<int>((ref) {
-  final cart = ref.watch(cartProvider);
-  return cart.maybeWhen(
-    data: (cart) => cart.items.length,
-    orElse: () => 0,
-  );
-});
-
-final cartTotalPriceProvider = Provider.autoDispose<double>((ref) {
+@riverpod
+double cartTotal(CartTotalRef ref) {
   final cart = ref.watch(cartProvider).value ?? const Cart();
   final productsList = ref.watch(productsListStreamProvider).value ?? [];
-
   if (cart.items.isNotEmpty && productsList.isNotEmpty) {
     var total = 0.0;
     for (final item in cart.items.entries) {
-      // For Cart item:
-      // - key: product ID
-      // - value: quantity
       final product =
           productsList.firstWhere((product) => product.id == item.key);
       total += product.price * item.value;
@@ -111,16 +100,17 @@ final cartTotalPriceProvider = Provider.autoDispose<double>((ref) {
   } else {
     return 0.0;
   }
-});
+}
 
-final itemAvailableQuantityProvider =
-    Provider.autoDispose.family<int, Product>((ref, product) {
+@riverpod
+int itemAvailableQuantity(ItemAvailableQuantityRef ref, Product product) {
   final cart = ref.watch(cartProvider).value;
-  if (cart == null) return product.availableQuantity;
-
-  // get the current quantity for the given product in the cart
-  final quantity = cart.items[product.id] ?? 0;
-
-  // subtract it from the product available quantity
-  return max(0, product.availableQuantity - quantity);
-});
+  if (cart != null) {
+    // get the current quantity for the given product in the cart
+    final quantity = cart.items[product.id] ?? 0;
+    // subtract it from the product available quantity
+    return max(0, product.availableQuantity - quantity);
+  } else {
+    return product.availableQuantity;
+  }
+}

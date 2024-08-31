@@ -11,12 +11,11 @@ class PaymentButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue>(paymentButtonControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
-
+    ref.listen<AsyncValue>(
+      paymentButtonControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
     final state = ref.watch(paymentButtonControllerProvider);
-
     return PrimaryButton(
       text: 'Pay'.hardcoded,
       isLoading: state.isLoading,

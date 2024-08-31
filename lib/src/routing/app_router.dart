@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen.dart';
@@ -13,6 +12,9 @@ import 'package:nice_and_healthy/src/features/products/presentation/products_lis
 import 'package:nice_and_healthy/src/features/reviews/presentation/leave_review_screen/leave_review_screen.dart';
 import 'package:nice_and_healthy/src/routing/go_router_refresh_stream.dart';
 import 'package:nice_and_healthy/src/routing/not_found_screen.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'app_router.g.dart';
 
 enum AppRoute {
   home,
@@ -25,24 +27,24 @@ enum AppRoute {
   signIn,
 }
 
-final goRouterProvider = Provider<GoRouter>((ref) {
+@Riverpod(keepAlive: true)
+GoRouter goRouter(GoRouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: false,
-    redirect: (_, state) {
+    redirect: (context, state) {
       final isLoggedIn = authRepository.currentUser != null;
-
       final path = state.uri.path;
       if (isLoggedIn) {
-        if (path == '/signIn') return '/';
+        if (path == '/signIn') {
+          return '/';
+        }
       } else {
         if (path == '/account' || path == '/orders') {
           return '/';
         }
       }
-
       return null;
     },
     refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
@@ -65,11 +67,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 name: AppRoute.leaveReview.name,
                 pageBuilder: (context, state) {
                   final productId = state.pathParameters['id']!;
-                  return MaterialPage<void>(
+                  return MaterialPage(
                     fullscreenDialog: true,
-                    child: LeaveReviewScreen(
-                      productId: productId,
-                    ),
+                    child: LeaveReviewScreen(productId: productId),
                   );
                 },
               ),
@@ -78,7 +78,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'cart',
             name: AppRoute.cart.name,
-            pageBuilder: (context, state) => const MaterialPage<void>(
+            pageBuilder: (context, state) => const MaterialPage(
               fullscreenDialog: true,
               child: ShoppingCartScreen(),
             ),
@@ -86,7 +86,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'checkout',
                 name: AppRoute.checkout.name,
-                pageBuilder: (context, state) => const MaterialPage<void>(
+                pageBuilder: (context, state) => const MaterialPage(
                   fullscreenDialog: true,
                   child: CheckoutScreen(),
                 ),
@@ -96,7 +96,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'orders',
             name: AppRoute.orders.name,
-            pageBuilder: (context, state) => const MaterialPage<void>(
+            pageBuilder: (context, state) => const MaterialPage(
               fullscreenDialog: true,
               child: OrdersListScreen(),
             ),
@@ -104,7 +104,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'account',
             name: AppRoute.account.name,
-            pageBuilder: (context, state) => const MaterialPage<void>(
+            pageBuilder: (context, state) => const MaterialPage(
               fullscreenDialog: true,
               child: AccountScreen(),
             ),
@@ -112,7 +112,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'signIn',
             name: AppRoute.signIn.name,
-            pageBuilder: (context, state) => const MaterialPage<void>(
+            pageBuilder: (context, state) => const MaterialPage(
               fullscreenDialog: true,
               child: EmailPasswordSignInScreen(
                 formType: EmailPasswordSignInFormType.signIn,
@@ -124,4 +124,4 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     ],
     errorBuilder: (context, state) => const NotFoundScreen(),
   );
-});
+}

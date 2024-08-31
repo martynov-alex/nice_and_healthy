@@ -6,7 +6,10 @@ import 'package:nice_and_healthy/src/features/orders/data/fake_orders_repository
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
 import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
-import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
+import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'fake_checkout_service.g.dart';
 
 /// A fake checkout service that doesn't process real payments.
 class FakeCheckoutService {
@@ -58,17 +61,18 @@ class FakeCheckoutService {
     if (cart.items.isEmpty) {
       return 0.0;
     }
-    final productsRepository = ref.read(productsRepositoryProvider);
+    final producsRepository = ref.read(productsRepositoryProvider);
     return cart.items.entries
         // first extract quantity * price for each item
         .map((entry) =>
             entry.value * // quantity
-            productsRepository.getProduct(entry.key)!.price) // price
+            producsRepository.getProduct(entry.key)!.price) // price
         // then add them up
         .reduce((value, element) => value + element);
   }
 }
 
-final checkoutServiceProvider = Provider<FakeCheckoutService>((ref) {
+@riverpod
+FakeCheckoutService checkoutService(CheckoutServiceRef ref) {
   return FakeCheckoutService(ref);
-});
+}

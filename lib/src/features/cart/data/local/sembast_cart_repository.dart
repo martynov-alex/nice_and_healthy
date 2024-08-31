@@ -7,47 +7,49 @@ import 'package:sembast/sembast_io.dart';
 import 'package:sembast_web/sembast_web.dart';
 
 class SembastCartRepository implements LocalCartRepository {
-  SembastCartRepository._(this._db);
+  SembastCartRepository(this.db);
+  final Database db;
+  final store = StoreRef.main();
 
-  final Database _db;
-  final _store = StoreRef.main();
-
-  static Future<Database> _createDatabase(String filename) async {
-    if (kIsWeb) return databaseFactoryWeb.openDatabase(filename);
-
-    final appDocDir = await getApplicationDocumentsDirectory();
-    return databaseFactoryIo.openDatabase('${appDocDir.path}/$filename');
+  static Future<Database> createDatabase(String filename) async {
+    if (!kIsWeb) {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      return databaseFactoryIo.openDatabase('${appDocDir.path}/$filename');
+    } else {
+      return databaseFactoryWeb.openDatabase(filename);
+    }
   }
 
   static Future<SembastCartRepository> makeDefault() async {
-    final db = await _createDatabase('cart.db');
-    return SembastCartRepository._(db);
+    return SembastCartRepository(await createDatabase('default.db'));
   }
 
   static const cartItemsKey = 'cartItems';
 
   @override
   Future<Cart> fetchCart() async {
-    final record = _store.record(cartItemsKey);
-    final cartJson = await record.get(_db) as String?;
-    if (cartJson == null) return const Cart();
-    return Cart.fromJson(cartJson);
-  }
-
-  @override
-  Stream<Cart> watchCart() {
-    final record = _store.record(cartItemsKey);
-    return record.onSnapshot(_db).map((snapshot) {
-      if (snapshot == null) return const Cart();
-      return Cart.fromJson(snapshot.value as String);
-    });
+    final cartJson = await store.record(cartItemsKey).get(db) as String?;
+    if (cartJson != null) {
+      return Cart.fromJson(cartJson);
+    } else {
+      return const Cart();
+    }
   }
 
   @override
   Future<void> setCart(Cart cart) {
-    return _store.record(cartItemsKey).put(_db, cart.toJson());
+    return store.record(cartItemsKey).put(db, cart.toJson());
   }
 
-  // call this when the DB is no longer needed
-  void dispose() => _db.close();
+  @override
+  Stream<Cart> watchCart() {
+    final record = store.record(cartItemsKey);
+    return record.onSnapshot(db).map((snapshot) {
+      if (snapshot != null) {
+        return Cart.fromJson(snapshot.value as String);
+      } else {
+        return const Cart();
+      }
+    });
+  }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
-const alertDialogDefaultKey = ValueKey('dialogDefaultKey');
+const alertDialogDefaultKey = Key('dialog-default-key');
 
 /// Generic function to show a platform-aware Material or Cupertino dialog
 Future<bool?> showAlertDialog({

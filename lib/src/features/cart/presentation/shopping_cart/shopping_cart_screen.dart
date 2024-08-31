@@ -21,21 +21,16 @@ class ShoppingCartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<void>>(
       shoppingCartScreenControllerProvider,
-      (_, state) {
-        state.showAlertDialogOnError(context);
-      },
+      (_, state) => state.showAlertDialogOnError(context),
     );
-
     final state = ref.watch(shoppingCartScreenControllerProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Shopping Cart'.hardcoded),
       ),
       body: Consumer(
-        builder: (_, ref, __) {
+        builder: (context, ref, child) {
           final cartValue = ref.watch(cartProvider);
-
           return AsyncValueWidget<Cart>(
             value: cartValue,
             data: (cart) => ShoppingCartItemsBuilder(

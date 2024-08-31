@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import '../../../../robot.dart';
 
 void main() {
@@ -24,7 +23,7 @@ void main() {
         await r.cart.addToCart();
         await r.cart.openCart();
         r.cart.expectItemQuantity(quantity: 1, atIndex: 0);
-        r.cart.expectShoppingCartTotalIs(r'Total: $15.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$15.00');
       });
     });
 
@@ -37,7 +36,7 @@ void main() {
         await r.cart.addToCart();
         await r.cart.openCart();
         r.cart.expectItemQuantity(quantity: 5, atIndex: 0);
-        r.cart.expectShoppingCartTotalIs(r'Total: $75.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$75.00');
       });
     });
 
@@ -50,7 +49,7 @@ void main() {
         await r.cart.addToCart();
         await r.cart.openCart();
         r.cart.expectItemQuantity(quantity: 5, atIndex: 0);
-        r.cart.expectShoppingCartTotalIs(r'Total: $75.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$75.00');
       });
     });
 
@@ -65,7 +64,7 @@ void main() {
         await r.cart.openCart();
         await r.cart.incrementCartItemQuantity(quantity: 2, atIndex: 0);
         r.cart.expectItemQuantity(quantity: 4, atIndex: 0);
-        r.cart.expectShoppingCartTotalIs(r'Total: $60.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$60.00');
       });
     });
 
@@ -80,7 +79,7 @@ void main() {
         await r.cart.openCart();
         await r.cart.decrementCartItemQuantity(quantity: 2, atIndex: 0);
         r.cart.expectItemQuantity(quantity: 3, atIndex: 0);
-        r.cart.expectShoppingCartTotalIs(r'Total: $45.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$45.00');
       });
     });
 
@@ -97,7 +96,7 @@ void main() {
         await r.cart.addToCart();
         await r.cart.openCart();
         r.cart.expectFindNCartItems(2);
-        r.cart.expectShoppingCartTotalIs(r'Total: $28.00');
+        r.cart.expectShoppingCartTotalIs('Total: \$28.00');
       });
     });
 

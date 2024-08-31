@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:nice_and_healthy/src/utils/delay.dart';
+import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 
 import '../../../../mocks.dart';
 import '../../auth_robot.dart';
@@ -14,50 +14,48 @@ void main() {
     await r.tapCancelButton();
     r.expectLogoutDialogNotFound();
   });
-
   testWidgets('Confirm logout, success', (tester) async {
     final r = AuthRobot(tester);
     await r.pumpAccountScreen();
-    await tester.runAsync(() async {
-      await r.tapLogoutButton();
-      r.expectLogoutDialogFound();
-      await r.tapDialogLogoutButton();
-    });
+    await r.tapLogoutButton();
+    r.expectLogoutDialogFound();
+    await r.tapDialogLogoutButton();
     r.expectLogoutDialogNotFound();
     r.expectErrorAlertNotFound();
   });
-
   testWidgets('Confirm logout, failure', (tester) async {
-    final authRepository = MockAuthRepository();
-    final exception = Exception('Connection fail');
-    when(authRepository.authStateChanges).thenAnswer(
-      (_) => Stream.value(testUser),
-    );
-    when(authRepository.signOut).thenThrow(exception);
     final r = AuthRobot(tester);
+    final authRepository = MockAuthRepository();
+    final exception = Exception('Connection Failed');
+    when(authRepository.signOut).thenThrow(exception);
+    when(authRepository.authStateChanges).thenAnswer(
+      (_) => Stream.value(
+        const AppUser(uid: '123', email: 'test@test.com'),
+      ),
+    );
     await r.pumpAccountScreen(authRepository: authRepository);
     await r.tapLogoutButton();
     r.expectLogoutDialogFound();
     await r.tapDialogLogoutButton();
     r.expectErrorAlertFound();
   });
-
-  testWidgets('Confirm logout, loading', (tester) async {
-    final authRepository = MockAuthRepository();
-    when(authRepository.authStateChanges).thenAnswer(
-      (_) => Stream.value(testUser),
-    );
-    when(authRepository.signOut).thenAnswer(
-      (_) => Future.delayed(
-          const Duration(seconds: fakeRepositoriesDelayDurationInSeconds)),
-    );
+  testWidgets('Confirm logout, loading state', (tester) async {
     final r = AuthRobot(tester);
+    final authRepository = MockAuthRepository();
+    when(authRepository.signOut).thenAnswer(
+      (_) => Future.delayed(const Duration(seconds: 1)),
+    );
+    when(authRepository.authStateChanges).thenAnswer(
+      (_) => Stream.value(
+        const AppUser(uid: '123', email: 'test@test.com'),
+      ),
+    );
     await r.pumpAccountScreen(authRepository: authRepository);
     await tester.runAsync(() async {
       await r.tapLogoutButton();
       r.expectLogoutDialogFound();
       await r.tapDialogLogoutButton();
     });
-    r.expectCircularProgressIndicatorFound();
+    r.expectCircularProgressIndicator();
   });
 }

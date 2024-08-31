@@ -7,7 +7,7 @@ import 'package:nice_and_healthy/src/features/products/data/fake_products_reposi
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 
 void main() {
-  group('cartTotalPriceProvider', () {
+  group('cartTotalProvider', () {
     ProviderContainer makeProviderContainer({
       required Stream<Cart> cart,
       required Stream<List<Product>> products,
@@ -26,7 +26,7 @@ void main() {
         products: Stream.value(kTestProducts),
       );
       await container.read(productsListStreamProvider.future);
-      final total = container.read(cartTotalPriceProvider);
+      final total = container.read(cartTotalProvider);
       expect(total, 0);
     });
 
@@ -37,7 +37,7 @@ void main() {
       );
       await container.read(cartProvider.future);
       await container.read(productsListStreamProvider.future);
-      final total = container.read(cartTotalPriceProvider);
+      final total = container.read(cartTotalProvider);
       expect(total, 0);
     });
 
@@ -48,7 +48,7 @@ void main() {
       );
       await container.read(cartProvider.future);
       await container.read(productsListStreamProvider.future);
-      final total = container.read(cartTotalPriceProvider);
+      final total = container.read(cartTotalProvider);
       expect(total, 15);
     });
 
@@ -59,7 +59,7 @@ void main() {
       );
       await container.read(cartProvider.future);
       await container.read(productsListStreamProvider.future);
-      final total = container.read(cartTotalPriceProvider);
+      final total = container.read(cartTotalProvider);
       expect(total, 75);
     });
 
@@ -70,7 +70,7 @@ void main() {
       );
       await container.read(cartProvider.future);
       await container.read(productsListStreamProvider.future);
-      final total = container.read(cartTotalPriceProvider);
+      final total = container.read(cartTotalProvider);
       expect(total, 69); // 15 * 2 + 13 * 3
     });
 
@@ -81,7 +81,7 @@ void main() {
       );
       await container.read(cartProvider.future);
       await container.read(productsListStreamProvider.future);
-      expect(() => container.read(cartTotalPriceProvider), throwsStateError);
+      expect(() => container.read(cartTotalProvider), throwsStateError);
     });
   });
 }

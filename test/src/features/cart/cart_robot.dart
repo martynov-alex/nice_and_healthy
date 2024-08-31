@@ -23,7 +23,7 @@ class CartRobot {
     await tester.pumpAndSettle();
   }
 
-  void expectProductIsOutOfStock() {
+  void expectProductIsOutOfStock() async {
     final finder = find.text('Out of Stock');
     expect(finder, findsOneWidget);
   }

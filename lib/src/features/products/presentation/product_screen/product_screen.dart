@@ -28,7 +28,6 @@ class ProductScreen extends StatelessWidget {
       body: Consumer(
         builder: (context, ref, _) {
           final productValue = ref.watch(productProvider(productId));
-
           return AsyncValueWidget<Product?>(
             value: productValue,
             data: (product) => product == null
@@ -62,7 +61,6 @@ class ProductDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final priceFormatted =
         ref.watch(currencyFormatterProvider).format(product.price);
-
     return ResponsiveTwoColumnLayout(
       startContent: Card(
         child: Padding(

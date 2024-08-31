@@ -43,27 +43,25 @@ void main() {
       required Map<ProductID, int> remoteCartItems,
       required Map<ProductID, int> expectedRemoteCartItems,
     }) async {
-      final uid = testUser.uid;
+      const uid = '123';
       when(authRepository.authStateChanges).thenAnswer(
-          (_) => Stream.value(AppUser(uid: uid, email: testPassword)));
+        (_) => Stream.value(const AppUser(uid: uid, email: 'test@test.com')),
+      );
       when(productsRepository.fetchProductsList)
           .thenAnswer((_) => Future.value(kTestProducts));
       when(localCartRepository.fetchCart)
           .thenAnswer((_) => Future.value(Cart(localCartItems)));
       when(() => remoteCartRepository.fetchCart(uid))
           .thenAnswer((_) => Future.value(Cart(remoteCartItems)));
-      when(
-        () => remoteCartRepository.setCart(uid, Cart(expectedRemoteCartItems)),
-      ).thenAnswer((_) => Future.value());
+      when(() =>
+              remoteCartRepository.setCart(uid, Cart(expectedRemoteCartItems)))
+          .thenAnswer((_) => Future.value());
       when(() => localCartRepository.setCart(const Cart()))
           .thenAnswer((_) => Future.value());
-
       // create cart sync service (return value not needed)
       makeCartSyncService();
-
       // wait for all the stubbed methods to return a value
-      await Future.delayed(Duration.zero);
-
+      await Future.delayed(const Duration());
       // verify
       verify(() => remoteCartRepository.setCart(
             uid,

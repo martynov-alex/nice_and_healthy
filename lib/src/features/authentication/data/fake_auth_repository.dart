@@ -1,9 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nice_and_healthy/src/exceptions/app_exception.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/fake_app_user.dart';
 import 'package:nice_and_healthy/src/utils/delay.dart';
 import 'package:nice_and_healthy/src/utils/in_memory_store.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'fake_auth_repository.g.dart';
 
 class FakeAuthRepository {
   FakeAuthRepository({this.addDelay = true});
@@ -18,7 +20,7 @@ class FakeAuthRepository {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     await delay(addDelay);
-    // check the given credentials against each registered user
+    // check the given credentials agains each registered user
     for (final u in _users) {
       // matching email and password
       if (u.email == email && u.password == password) {
@@ -70,13 +72,15 @@ class FakeAuthRepository {
   }
 }
 
-final authRepositoryProvider = Provider<FakeAuthRepository>((ref) {
+@Riverpod(keepAlive: true)
+FakeAuthRepository authRepository(AuthRepositoryRef ref) {
   final auth = FakeAuthRepository();
   ref.onDispose(() => auth.dispose());
   return auth;
-});
+}
 
-final authStateChangesProvider = StreamProvider<AppUser?>((ref) {
+@Riverpod(keepAlive: true)
+Stream<AppUser?> authStateChanges(AuthStateChangesRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return authRepository.authStateChanges();
-});
+}

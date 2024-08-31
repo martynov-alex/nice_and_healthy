@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nice_and_healthy/src/features/cart/presentation/cart_total/cart_total_text.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
+import 'package:nice_and_healthy/src/features/cart/presentation/cart_total/cart_total_text.dart';
 
 /// Widget for showing the shopping cart total with a checkout button
 class CartTotalWithCTA extends StatelessWidget {

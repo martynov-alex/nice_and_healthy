@@ -5,8 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import '../test/src/robot.dart';
 
 void main() {
-  setUpAll(IntegrationTestWidgetsFlutterBinding.ensureInitialized);
-
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Full purchase flow', (tester) async {
     final r = Robot(tester);
     await r.pumpMyApp();

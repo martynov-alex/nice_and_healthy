@@ -12,13 +12,10 @@ import 'package:nice_and_healthy/src/features/reviews/presentation/product_revie
 /// Shows the list of reviews for a given product ID
 class ProductReviewsList extends ConsumerWidget {
   const ProductReviewsList({super.key, required this.productId});
-
   final ProductID productId;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reviewsValue = ref.watch(productReviewsProvider(productId));
-
     return AsyncValueSliverWidget<List<Review>>(
       value: reviewsValue,
       data: (reviews) => SliverList(

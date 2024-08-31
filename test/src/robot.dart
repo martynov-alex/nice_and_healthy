@@ -39,6 +39,7 @@ class Robot {
   final GoldenRobot golden;
 
   Future<void> pumpMyApp() async {
+    // Override repositories
     final productsRepository = FakeProductsRepository(addDelay: false);
     final authRepository = FakeAuthRepository(addDelay: false);
     final localCartRepository = FakeLocalCartRepository(addDelay: false);

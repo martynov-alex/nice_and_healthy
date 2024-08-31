@@ -10,8 +10,6 @@ import 'package:nice_and_healthy/src/features/authentication/presentation/sign_i
 import 'package:nice_and_healthy/src/features/authentication/presentation/sign_in/email_password_sign_in_screen.dart';
 import 'package:nice_and_healthy/src/features/products/presentation/home_app_bar/more_menu_button.dart';
 
-import '../../mocks.dart';
-
 class AuthRobot {
   AuthRobot(this.tester);
   final WidgetTester tester;
@@ -27,7 +25,7 @@ class AuthRobot {
     required FakeAuthRepository authRepository,
     required EmailPasswordSignInFormType formType,
     VoidCallback? onSignedIn,
-  }) async {
+  }) {
     return tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -89,9 +87,9 @@ class AuthRobot {
   }
 
   Future<void> enterAndSubmitEmailAndPassword() async {
-    await enterEmail(testEmail);
+    await enterEmail('test@test.com');
     await tester.pump();
-    await enterPassword(testPassword);
+    await enterPassword('test1234');
     await tapEmailAndPasswordSubmitButton();
   }
 
@@ -107,7 +105,9 @@ class AuthRobot {
       ProviderScope(
         overrides: [
           if (authRepository != null)
-            authRepositoryProvider.overrideWithValue(authRepository),
+            authRepositoryProvider.overrideWithValue(
+              authRepository,
+            )
         ],
         child: const MaterialApp(
           home: AccountScreen(),
@@ -147,28 +147,17 @@ class AuthRobot {
     await tester.pump();
   }
 
-  // * or
-  // Future<void> tapDialogLogoutButton() async {
-  //   final logoutButton = find.descendant(
-  //     of: find.byType(Dialog),
-  //     matching: find.text('Logout'),
-  //   );
-  //   expect(logoutButton, findsOneWidget);
-  //   await tester.tap(logoutButton);
-  //   await tester.pumpAndSettle();
-  // }
-
   void expectErrorAlertFound() {
-    final dialogTitle = find.text('Error');
-    expect(dialogTitle, findsOneWidget);
+    final finder = find.text('Error');
+    expect(finder, findsOneWidget);
   }
 
   void expectErrorAlertNotFound() {
-    final dialogTitle = find.text('Error');
-    expect(dialogTitle, findsNothing);
+    final finder = find.text('Error');
+    expect(finder, findsNothing);
   }
 
-  void expectCircularProgressIndicatorFound() {
+  void expectCircularProgressIndicator() {
     final finder = find.byType(CircularProgressIndicator);
     expect(finder, findsOneWidget);
   }

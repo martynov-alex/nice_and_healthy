@@ -19,12 +19,10 @@ class LeaveReviewAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orders = ref.watch(matchingUserOrdersProvider(productId)).value ?? [];
-
-    if (orders.isNotEmpty) {
+    final orders = ref.watch(matchingUserOrdersProvider(productId)).value;
+    if (orders != null && orders.isNotEmpty) {
       final dateFormatted =
           ref.watch(dateFormatterProvider).format(orders.first.orderDate);
-
       return Column(
         children: [
           const Divider(),
@@ -39,7 +37,7 @@ class LeaveReviewAction extends ConsumerWidget {
             columnCrossAxisAlignment: CrossAxisAlignment.center,
             startContent: Text('Purchased on $dateFormatted'.hardcoded),
             endContent: Consumer(
-              builder: (_, WidgetRef ref, __) {
+              builder: (context, ref, child) {
                 final reviewValue =
                     ref.watch(userReviewStreamProvider(productId));
 

@@ -1,82 +1,120 @@
-// forces any tests to be interrupted if they take more than one second
-// ignore: library_annotations
 @Timeout(Duration(milliseconds: 500))
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nice_and_healthy/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:nice_and_healthy/src/features/authentication/presentation/account/account_screen_controller.dart';
 
 import '../../../../mocks.dart';
 
 void main() {
+  ProviderContainer makeProviderContainer(MockAuthRepository authRepository) {
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(authRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+    return container;
+  }
+
+  setUpAll(() {
+    registerFallbackValue(const AsyncLoading<int>());
+  });
+
   group('AccountScreenController', () {
-    late MockAuthRepository authRepository;
-    late AccountScreenController controller;
-    // this is called before each test
-    setUp(() {
-      authRepository = MockAuthRepository();
-      controller = AccountScreenController(
-        authRepository: authRepository,
+    test('initial state is AsyncData', () {
+      final authRepository = MockAuthRepository();
+      // create the ProviderContainer with the mock auth repository
+      final container = makeProviderContainer(authRepository);
+      // create a listener
+      final listener = Listener<AsyncValue<void>>();
+      // listen to the provider and call [listener] whenever its value changes
+      container.listen(
+        accountScreenControllerProvider,
+        listener.call,
+        fireImmediately: true,
       );
-    });
-    test('initial state is AsyncValue.data(null)', () {
+      // verify
+      verify(
+        // the build method returns a value immediately, so we expect AsyncData
+        () => listener(null, const AsyncData<void>(null)),
+      );
+      // verify that the listener is no longer called
+      verifyNoMoreInteractions(listener);
+      // verify that [signInAnonymously] was not called during initialization
       verifyNever(authRepository.signOut);
-      expect(controller.state, const AsyncData<void>(null));
     });
 
-    test(
-      'signOut success',
-      () async {
-        // setup
-        when(authRepository.signOut).thenAnswer((_) => Future.value());
-        // expect later
-        expectLater(
-            controller.stream,
-            emitsInOrder([
-              const AsyncLoading<void>(),
-              const AsyncData<void>(null),
-            ]));
-        // run
-        await controller.signOut();
-        // verify
-        verify(() => authRepository.signOut()).called(1);
-        // expect(controller.state, const AsyncData<void>(null));
-      },
-    );
-
-    test(
-      'signOut failure',
-      () async {
-        // setup
-        final exception = Exception('Connection failed');
-        when(authRepository.signOut).thenThrow(exception);
-        // expect later
-        expectLater(
-            controller.stream,
-            emitsInOrder([
-              const AsyncLoading<void>(),
-              predicate<AsyncValue<void>>((value) {
-                expect(value.hasError, true);
-                expect(value.error, exception);
-                return true;
-              }),
-              // or
-              // isA<AsyncError<void>>(),
-              // or
-              // predicate<AsyncValue<void>>((value) {
-              //   return value is AsyncError && value.error == exception;
-              // }),
-            ]));
-        // run
-        await controller.signOut();
-        // verify
-        verify(() => authRepository.signOut()).called(1);
-        // expect(controller.state.hasError, true);
-        // or
-        // expect(controller.state, isA<AsyncError<void>>());
-        // or
-        // expect(controller.state.error, exception);
-      },
-    );
+    test('signOut success', () async {
+      // setup
+      final authRepository = MockAuthRepository();
+      // stub method to return success
+      when(authRepository.signOut).thenAnswer((_) => Future.value());
+      // create the ProviderContainer with the mock auth repository
+      final container = makeProviderContainer(authRepository);
+      // create a listener
+      final listener = Listener<AsyncValue<void>>();
+      // listen to the provider and call [listener] whenever its value changes
+      container.listen(
+        accountScreenControllerProvider,
+        listener.call,
+        fireImmediately: true,
+      );
+      // sto
+      const data = AsyncData<void>(null);
+      // verify initial value from build method
+      verify(() => listener(null, data));
+      // run
+      final controller =
+          container.read(accountScreenControllerProvider.notifier);
+      await controller.signOut();
+      // verify
+      verifyInOrder([
+        // set loading state
+        // * use a matcher since AsyncLoading != AsyncLoading with data
+        // * https://codewithandrea.com/articles/unit-test-async-notifier-riverpod/
+        () => listener(data, any(that: isA<AsyncLoading>())),
+        // data when complete
+        () => listener(any(that: isA<AsyncLoading>()), data),
+      ]);
+      verifyNoMoreInteractions(listener);
+      verify(authRepository.signOut).called(1);
+    });
+    test('signOut failure', () async {
+      // setup
+      final authRepository = MockAuthRepository();
+      // stub method to return success
+      final exception = Exception('Connection failed');
+      when(authRepository.signOut).thenThrow(exception);
+      // create the ProviderContainer with the mock auth repository
+      final container = makeProviderContainer(authRepository);
+      // create a listener
+      final listener = Listener<AsyncValue<void>>();
+      // listen to the provider and call [listener] whenever its value changes
+      container.listen(
+        accountScreenControllerProvider,
+        listener.call,
+        fireImmediately: true,
+      );
+      const data = AsyncData<void>(null);
+      // verify initial value from build method
+      verify(() => listener(null, data));
+      // run
+      final controller =
+          container.read(accountScreenControllerProvider.notifier);
+      await controller.signOut();
+      // verify
+      verifyInOrder([
+        // set loading state
+        // * use a matcher since AsyncLoading != AsyncLoading with data
+        () => listener(data, any(that: isA<AsyncLoading>())),
+        // error when complete
+        () => listener(
+            any(that: isA<AsyncLoading>()), any(that: isA<AsyncError>())),
+      ]);
+      verifyNoMoreInteractions(listener);
+      verify(authRepository.signOut).called(1);
+    });
   });
 }

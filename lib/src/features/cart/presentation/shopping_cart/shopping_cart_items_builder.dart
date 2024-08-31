@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:nice_and_healthy/src/features/cart/presentation/cart_total/cart_total_with_cta.dart';
 import 'package:nice_and_healthy/src/common_widgets/decorated_box_with_shadow.dart';
+import 'package:nice_and_healthy/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:nice_and_healthy/src/common_widgets/responsive_center.dart';
 import 'package:nice_and_healthy/src/constants/app_sizes.dart';
 import 'package:nice_and_healthy/src/constants/breakpoints.dart';
-import 'package:nice_and_healthy/src/common_widgets/empty_placeholder_widget.dart';
-import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/features/cart/domain/item.dart';
+import 'package:nice_and_healthy/src/features/cart/presentation/cart_total/cart_total_with_cta.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
 /// Responsive widget showing the cart items and the checkout button
 class ShoppingCartItemsBuilder extends StatelessWidget {

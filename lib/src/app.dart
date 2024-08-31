@@ -9,12 +9,10 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-
     return MaterialApp.router(
+      routerConfig: goRouter,
       debugShowCheckedModeBanner: false,
       restorationScopeId: 'app',
-      routerConfig: goRouter,
-      // * The home page of the app
       onGenerateTitle: (BuildContext context) => 'My Shop'.hardcoded,
       theme: ThemeData(
         // * Use this to toggle Material 3 (defaults to true since Flutter 3.16)

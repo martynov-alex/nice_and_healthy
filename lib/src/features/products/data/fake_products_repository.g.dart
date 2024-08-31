@@ -24,7 +24,7 @@ final productsRepositoryProvider =
 
 typedef ProductsRepositoryRef = AutoDisposeProviderRef<FakeProductsRepository>;
 String _$productsListStreamHash() =>
-    r'a772dbdb0110014407e77b0bb15363fdec1b1dc9';
+    r'6ce4881c188ad3ff4e1f795150e00decd5aa2fa0';
 
 /// See also [productsListStream].
 @ProviderFor(productsListStream)
@@ -41,7 +41,7 @@ final productsListStreamProvider =
 
 typedef ProductsListStreamRef = AutoDisposeStreamProviderRef<List<Product>>;
 String _$productsListFutureHash() =>
-    r'61849f494138f4439bae1f3104952d9b83b53242';
+    r'8f018bf574c889710ce2ba492782d7bb421cfbed';
 
 /// See also [productsListFuture].
 @ProviderFor(productsListFuture)
@@ -57,7 +57,7 @@ final productsListFutureProvider =
 );
 
 typedef ProductsListFutureRef = AutoDisposeFutureProviderRef<List<Product>>;
-String _$productHash() => r'00b7fe8581d6824caafed9888797efb31f045817';
+String _$productHash() => r'5a13397cd9ecf77474aef18035961240f3400e67';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -206,7 +206,7 @@ class _ProductProviderElement extends AutoDisposeStreamProviderElement<Product?>
 }
 
 String _$productsListSearchHash() =>
-    r'b71195db7b46f5756eafa8f086caba3719938b37';
+    r'fe33258d5369d856552d1eb45b72467729a06adc';
 
 /// See also [productsListSearch].
 @ProviderFor(productsListSearch)

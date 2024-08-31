@@ -28,9 +28,8 @@ class LeaveReviewScreen extends StatelessWidget {
         maxContentWidth: Breakpoint.tablet,
         padding: const EdgeInsets.all(Sizes.p16),
         child: Consumer(
-          builder: (_, ref, __) {
+          builder: (context, ref, child) {
             final reviewValue = ref.watch(userReviewFutureProvider(productId));
-
             return AsyncValueWidget<Review?>(
               value: reviewValue,
               data: (review) =>
@@ -79,11 +78,11 @@ class _LeaveReviewFormState extends ConsumerState<LeaveReviewForm> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(leaveReviewControllerProvider, (_, state) {
-      state.showAlertDialogOnError(context);
-    });
+    ref.listen<AsyncValue>(
+      leaveReviewControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
     final state = ref.watch(leaveReviewControllerProvider);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -114,16 +113,15 @@ class _LeaveReviewFormState extends ConsumerState<LeaveReviewForm> {
         gapH32,
         PrimaryButton(
           text: 'Submit'.hardcoded,
-          // TODO: Loading state
           isLoading: state.isLoading,
           onPressed: state.isLoading || _rating == 0
               ? null
               : () =>
                   ref.read(leaveReviewControllerProvider.notifier).submitReview(
+                        previousReview: widget.review,
                         productId: widget.productId,
                         rating: _rating,
                         comment: _controller.text,
-                        previousReview: widget.review,
                         onSuccess: context.pop,
                       ),
         )

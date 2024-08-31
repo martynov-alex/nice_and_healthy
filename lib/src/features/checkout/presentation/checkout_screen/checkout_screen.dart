@@ -12,7 +12,6 @@ enum CheckoutSubRoute { register, payment }
 /// This is the root widget of the checkout flow, which is composed of 2 pages:
 /// 1. Register page
 /// 2. Payment page
-// TODO: Show the correct page based on whether the user is signed in.
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
@@ -24,7 +23,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   late final PageController _controller;
 
   var _subRoute = CheckoutSubRoute.register;
-  // TODO: Load the correct initial page when this screen is presented
 
   @override
   void initState() {
@@ -33,7 +31,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (user != null) {
       setState(() => _subRoute = CheckoutSubRoute.payment);
     }
-    // only initialize the controller once we know what is the initialPage
     _controller = PageController(initialPage: _subRoute.index);
   }
 
@@ -41,6 +38,16 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onSignedIn() {
+    setState(() => _subRoute = CheckoutSubRoute.payment);
+    // perform a nice scroll animation to reveal the next page
+    _controller.animateToPage(
+      _subRoute.index,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -66,16 +73,6 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           const PaymentPage()
         ],
       ),
-    );
-  }
-
-  void _onSignedIn() {
-    setState(() => _subRoute = CheckoutSubRoute.payment);
-    // perform a nice scroll animation to reveal the next page
-    _controller.animateToPage(
-      _subRoute.index,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
     );
   }
 }

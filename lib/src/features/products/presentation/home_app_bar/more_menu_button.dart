@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/features/authentication/domain/app_user.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:nice_and_healthy/src/routing/app_router.dart';
 
 enum PopupMenuOption {

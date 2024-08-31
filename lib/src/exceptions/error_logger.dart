@@ -1,20 +1,22 @@
-import 'dart:developer';
-
+import 'package:flutter/foundation.dart';
 import 'package:nice_and_healthy/src/exceptions/app_exception.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'error_logger.g.dart';
 
 class ErrorLogger {
   void logError(Object error, StackTrace? stackTrace) {
-    // * This can be replaced with a call to a crash reporting tool of choice.
-    log('$error, $stackTrace', name: 'error_logger');
+    // * This can be replaced with a call to a crash reporting tool of choice
+    debugPrint('$error, $stackTrace');
   }
 
   void logAppException(AppException exception) {
-    // * This can be replaced with a call to a crash reporting tool of choice.
-    log('$exception', name: 'error_logger');
+    // * This can be replaced with a call to a crash reporting tool of choice
+    debugPrint('$exception');
   }
 }
 
-final errorLoggerProvider = Provider<ErrorLogger>((ref) {
+@riverpod
+ErrorLogger errorLogger(ErrorLoggerRef ref) {
   return ErrorLogger();
-});
+}

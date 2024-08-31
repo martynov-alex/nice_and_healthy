@@ -33,7 +33,6 @@ class ShoppingCartItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productValue = ref.watch(productProvider(item.productId));
-
     return AsyncValueWidget<Product?>(
       value: productValue,
       data: (product) => Padding(
@@ -127,7 +126,6 @@ class EditOrRemoveItemWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(shoppingCartScreenControllerProvider);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -139,7 +137,7 @@ class EditOrRemoveItemWidget extends ConsumerWidget {
               ? null
               : (quantity) => ref
                   .read(shoppingCartScreenControllerProvider.notifier)
-                  .updateItemQuantity(product.id, quantity),
+                  .updateItemQuantity(item.productId, quantity),
         ),
         IconButton(
           key: deleteKey(itemIndex),
@@ -148,7 +146,7 @@ class EditOrRemoveItemWidget extends ConsumerWidget {
               ? null
               : () => ref
                   .read(shoppingCartScreenControllerProvider.notifier)
-                  .removeItemById(product.id),
+                  .removeItemById(item.productId),
         ),
         const Spacer(),
       ],

@@ -1,6 +1,6 @@
-import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
+import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
 
 /// Shows the status of the order
 class OrderStatusLabel extends StatelessWidget {
