@@ -6,7 +6,7 @@ import 'package:nice_and_healthy/src/features/orders/data/fake_orders_repository
 import 'package:nice_and_healthy/src/features/orders/domain/order.dart';
 import 'package:nice_and_healthy/src/features/products/data/fake_products_repository.dart';
 import 'package:nice_and_healthy/src/localization/string_hardcoded.dart';
-import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fake_checkout_service.g.dart';

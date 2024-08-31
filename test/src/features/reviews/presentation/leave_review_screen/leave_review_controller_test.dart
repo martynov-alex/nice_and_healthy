@@ -41,7 +41,7 @@ void main() {
       when(() => reviewsService.submitReview(
             productId: testProductId,
             review: testReview,
-          )).thenAnswer((_) async => Future.value());
+          )).thenAnswer((_) => Future.value());
       final container = makeProviderContainer(reviewsService);
       final controller = container.read(leaveReviewControllerProvider.notifier);
       final listener = Listener<AsyncValue<void>>();

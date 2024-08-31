@@ -1,22 +1,17 @@
 import 'package:nice_and_healthy/src/features/products/domain/product.dart';
 import 'package:nice_and_healthy/src/features/reviews/application/reviews_service.dart';
 import 'package:nice_and_healthy/src/features/reviews/domain/review.dart';
-import 'package:nice_and_healthy/src/utils/current_date_provider.dart';
+import 'package:nice_and_healthy/src/utils/current_date_builder.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'leave_review_controller.g.dart';
 
 @riverpod
 class LeaveReviewController extends _$LeaveReviewController {
-  final _initial = Object();
-  late var _current = _initial;
-
-  // An [Object] instance is equal to itself only.
-  bool get _mounted => _current == _initial;
-
+  bool mounted = true;
   @override
   FutureOr<void> build() {
-    ref.onDispose(() => _current = Object());
+    ref.onDispose(() => mounted = false);
     // nothing to do
   }
 
@@ -41,7 +36,7 @@ class LeaveReviewController extends _$LeaveReviewController {
       state = const AsyncLoading();
       final newState = await AsyncValue.guard(() =>
           reviewsService.submitReview(productId: productId, review: review));
-      if (_mounted) {
+      if (mounted) {
         // * only set the state if the controller hasn't been disposed
         state = newState;
         if (state.hasError == false) {
